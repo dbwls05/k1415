@@ -49,6 +49,7 @@ Constraints: Single HTML file, no external JS/CSS (except CDNs), no SVG/Mermaid.
     </style>
 </head>
 <body class="antialiased">
+    <!-- Header -->
     <header class="bg-primary-blue text-white py-8 px-4 text-center rounded-b-xl shadow-xl">
         <h1 class="text-3xl md:text-4xl font-bold report-title-main mb-2">학습 도우미 AI, 어디까지 써야할까?</h1>
         <p class="text-xl md:text-2xl font-semibold mb-3">학생들의 생성형 AI 활용 실태와 학습 태도 분석</p>
@@ -56,6 +57,7 @@ Constraints: Single HTML file, no external JS/CSS (except CDNs), no SVG/Mermaid.
     </header>
 
     <main class="container mx-auto p-4 md:p-8">
+        <!-- Section 1: 조사 동기와 목적 -->
         <section id="motivation-purpose" class="mb-12">
             <h2 class="text-2xl md:text-3xl font-semibold section-title-custom mt-8">1. 조사 동기와 목적</h2>
             <div class="grid md:grid-cols-2 gap-6">
@@ -70,6 +72,7 @@ Constraints: Single HTML file, no external JS/CSS (except CDNs), no SVG/Mermaid.
             </div>
         </section>
 
+        <!-- Section 2: 조사 계획 -->
         <section id="research-plan" class="mb-12">
             <h2 class="text-2xl md:text-3xl font-semibold section-title-custom">2. 조사 계획</h2>
             <div class="card-custom p-6">
@@ -105,12 +108,14 @@ Constraints: Single HTML file, no external JS/CSS (except CDNs), no SVG/Mermaid.
             </div>
         </section>
 
+        <!-- Section 3: 조사 결과 -->
         <section id="research-results" class="mb-12">
             <h2 class="text-2xl md:text-3xl font-semibold section-title-custom">3. 조사 결과</h2>
             
             <div class="mb-10">
                 <h3 class="text-xl md:text-2xl font-semibold text-primary-blue mb-6 text-center">가. 설문조사 분석 결과</h3>
                 <div class="grid md:grid-cols-1 lg:grid-cols-3 gap-8">
+                    <!-- CHARTJS_Q1_SURVEY_EFFECTIVENESS -->
                     <div class="card-custom p-6 flex flex-col items-center">
                         <h4 class="text-lg font-semibold mb-1 text-center">Q1. AI 도움, 어느 정도가 효과적일까?</h4>
                         <p class="text-xs text-gray-500 mb-3 text-center">AI의 도움을 어느 정도까지 받는 것이 학습에 가장 효과적이라고 생각하나요?</p>
@@ -119,6 +124,7 @@ Constraints: Single HTML file, no external JS/CSS (except CDNs), no SVG/Mermaid.
                         </div>
                     </div>
 
+                    <!-- CHARTJS_Q2_SURVEY_UNDERSTANDING -->
                     <div class="card-custom p-6 flex flex-col items-center">
                         <h4 class="text-lg font-semibold mb-1 text-center">Q2. AI 답변, 얼마나 이해할까?</h4>
                         <p class="text-xs text-gray-500 mb-3 text-center">AI가 답을 알려줄 때, 그 내용을 완전히 이해하고 넘어가는 편인가요?</p>
@@ -127,6 +133,7 @@ Constraints: Single HTML file, no external JS/CSS (except CDNs), no SVG/Mermaid.
                         </div>
                     </div>
                     
+                    <!-- CHARTJS_Q3_SURVEY_HINDRANCE -->
                     <div class="card-custom p-6 flex flex-col items-center">
                         <h4 class="text-lg font-semibold mb-1 text-center">Q3. AI 사용, 사고력에 방해될까?</h4>
                         <p class="text-xs text-gray-500 mb-3 text-center">생성형 AI 사용이 스스로 사고하는 능력이나 지식 쌓기에 방해가 된다고 느끼시나요?</p>
@@ -146,8 +153,11 @@ Constraints: Single HTML file, no external JS/CSS (except CDNs), no SVG/Mermaid.
             <div>
                 <h3 class="text-xl md:text-2xl font-semibold text-primary-blue mb-6 text-center">나. 개별 인터뷰 분석 결과</h3>
                 <div class="grid md:grid-cols-2 gap-8">
+                    <!-- HTML_CSS_DIAGRAM_INTERVIEW_SUMMARY_1 -->
                     <div class="card-custom p-6">
                         <h4 class="text-lg font-semibold mb-3 text-center">인터뷰 1: 조정모 학생</h4>
+                        <!-- Interview Photo for Jo Jeong-mo -->
+                        <img src="src/인터뷰사진_정모.png" alt="조정모 학생 인터뷰 사진" class="w-full h-auto rounded-lg mb-4 shadow-md">
                         <div class="space-y-2 text-gray-700 leading-relaxed">
                             <p class="interview-summary-item"><strong>인식:</strong> AI는 다양한 시각과 관점을 제시하는 도구. 자신이 생각 못한 방식 제시.</p>
                             <p class="interview-summary-item"><strong>태도:</strong> AI 의존에 선을 그음. 스스로 해결 노력, AI는 보조 수단.</p>
@@ -158,10 +168,15 @@ Constraints: Single HTML file, no external JS/CSS (except CDNs), no SVG/Mermaid.
                             <h5 class="font-semibold mb-2 text-sm">주요 키워드:</h5>
                             <span class="keyword-tag">다양한 시각</span> <span class="keyword-tag">보조 수단</span> <span class="keyword-tag">자기 주도</span> <span class="keyword-tag">부정확성</span> <span class="keyword-tag">신뢰도 문제</span> <span class="keyword-tag">기준 모호</span>
                         </div>
+                        <!-- Word Cloud Image for Jo Jeong-mo -->
+                        <img src="src/워드클라우드_정모.png" alt="조정모 학생 인터뷰 워드 클라우드" class="w-full h-auto rounded-lg mt-4 shadow-md">
                     </div>
 
+                    <!-- HTML_CSS_DIAGRAM_INTERVIEW_SUMMARY_2 -->
                     <div class="card-custom p-6">
                         <h4 class="text-lg font-semibold mb-3 text-center">인터뷰 2: 정재희 학생</h4>
+                        <!-- Interview Photo for Jeong Jae-hee -->
+                        <img src="src/인터뷰사진_재희.png" alt="정재희 학생 인터뷰 사진" class="w-full h-auto rounded-lg mb-4 shadow-md">
                          <div class="space-y-2 text-gray-700 leading-relaxed">
                             <p class="interview-summary-item"><strong>활용 방식:</strong> 코딩 테스트 준비 시 GPT 코드 단순 복사 아닌, 스스로 해석 및 이해 노력.</p>
                             <p class="interview-summary-item"><strong>효율성:</strong> 모르는 내용 검색보다 빠르게 정보 획득. 정보 탐색 도구로 활용.</p>
@@ -173,11 +188,14 @@ Constraints: Single HTML file, no external JS/CSS (except CDNs), no SVG/Mermaid.
                             <h5 class="font-semibold mb-2 text-sm">주요 키워드:</h5>
                             <span class="keyword-tag">코드 해석</span> <span class="keyword-tag">자기 주도 학습</span> <span class="keyword-tag">빠른 정보 탐색</span> <span class="keyword-tag">효율성</span> <span class="keyword-tag">도덕적 고민</span> <span class="keyword-tag">기준 없음</span>
                         </div>
+                        <!-- Word Cloud Image for Jeong Jae-hee -->
+                        <img src="src/워드클라우드_재희.png" alt="정재희 학생 인터뷰 워드 클라우드" class="w-full h-auto rounded-lg mt-4 shadow-md">
                     </div>
                 </div>
             </div>
         </section>
 
+        <!-- Section 4: 결론 -->
         <section id="conclusion" class="mb-12">
             <h2 class="text-2xl md:text-3xl font-semibold section-title-custom">4. 결론</h2>
             <div class="card-custom p-6 mb-8">
@@ -224,6 +242,7 @@ Constraints: Single HTML file, no external JS/CSS (except CDNs), no SVG/Mermaid.
             </div>
         </section>
 
+        <!-- Section 5: 참고자료 -->
         <section id="references" class="mb-12">
             <h2 class="text-2xl md:text-3xl font-semibold section-title-custom">5. 참고자료</h2>
             <div class="card-custom p-6">
@@ -237,10 +256,14 @@ Constraints: Single HTML file, no external JS/CSS (except CDNs), no SVG/Mermaid.
         </section>
     </main>
 
+    <!-- Footer -->
     <footer class="text-center py-8 px-4 bg-gray-800 text-gray-300 rounded-t-xl mt-12">
         <p class="text-sm">본 인포그래픽은 제공된 "학습 도우미 AI, 어디까지 써야할까?" 학생 공동 조사 보고서 내용을 기반으로 생성되었습니다.</p>
         <p class="text-xs mt-1">&copy; 2025 미림마이스터고 1학년 4반 4조 (내용 기준). 인포그래픽 생성: AI</p>
     </footer>
+
+    <!-- HTML 끝 부분 주석 -->
+    <!-- 이 HTML 인포그래픽은 학생 보고서의 내용을 시각화한 것입니다. Chart.js와 Tailwind CSS가 사용되었습니다. -->
 
     <script>
         // 타입스크립트에서 변환된 JavaScript 코드
