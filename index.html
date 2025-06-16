@@ -22,8 +22,8 @@ Constraints: Single HTML file, no external JS/CSS (except CDNs), no SVG/Mermaid.
             margin: 0;
             overflow-x: hidden; /* Prevent horizontal scroll */
             
-            /* Initial Full screen gradient background for the entire page */
-            background: linear-gradient(to bottom, #2A62B6, rgba(42, 98, 182, 0.7), transparent);
+            /* Initial Full screen gradient background for the entire page - Adjusted to new palette */
+            background: linear-gradient(to bottom, #819A91, #A7C1A870, transparent);
             background-repeat: no-repeat;
             background-attachment: fixed; /* Keep gradient fixed while scrolling initially */
             transition: background 0.8s ease-out; /* Smooth transition for background property */
@@ -40,12 +40,12 @@ Constraints: Single HTML file, no external JS/CSS (except CDNs), no SVG/Mermaid.
             padding: 0; /* Remove any default body padding */
             box-sizing: border-box;
         }
-        /* Styles for body after initial view is removed (content is revealed) */
+        /* Styles for body after initial view is removed (content is revealed) - Adjusted to new palette */
         body:not(.initial-view) {
             display: block; /* Revert to normal block display */
             min-height: auto; /* Remove min-height */
             overflow-y: auto; /* Allow scrolling */
-            background: #F8F9FA; /* Lighter grey as requested */
+            background: #F4F7F9; /* Lighter grey as requested */
             background-attachment: scroll; /* Allow background to scroll with content */
             padding: 0; /* Remove padding when content is revealed */
         }
@@ -54,24 +54,30 @@ Constraints: Single HTML file, no external JS/CSS (except CDNs), no SVG/Mermaid.
             position: relative; /* Chart.js 반응형에 필요 */
         }
         .report-title-main { color: #FFFFFF; } /* Header text is white */
-        .section-title-custom { color: #2A62B6; border-bottom: 3px solid #4ECDC4; padding-bottom: 0.75rem; margin-bottom: 2rem; font-weight: 700; }
+        /* Section title custom styles - Adjusted to new palette */
+        .section-title-custom { color: #819A91; border-bottom: 3px solid #A7C1A8; padding-bottom: 0.75rem; margin-bottom: 2rem; font-weight: 700; }
         .card-custom { background-color: #FFFFFF; border-radius: 0.75rem; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06); }
-        .keyword-tag { background-color: #E0F2FE; color: #2A62B6; padding: 0.3rem 0.8rem; border-radius: 9999px; font-size: 0.9rem; margin-right: 0.5rem; margin-bottom: 0.5rem; display: inline-block; font-weight: 500; }
-        .recommendation-item { border-left: 4px solid #4ECDC4; padding-left: 1.25rem; margin-bottom: 1rem; }
+        /* Keyword tag styles - Adjusted to new palette */
+        .keyword-tag { background-color: #EEEFE0; color: #819A91; padding: 0.3rem 0.8rem; border-radius: 9999px; font-size: 0.9rem; margin-right: 0.5rem; margin-bottom: 0.5rem; display: inline-block; font-weight: 500; }
+        /* Recommendation item border - Adjusted to new palette */
+        .recommendation-item { border-left: 4px solid #A7C1A8; padding-left: 1.25rem; margin-bottom: 1rem; }
         .interview-summary-item { margin-bottom: 0.75rem; }
-        .interview-summary-item strong { color: #2A62B6; } /* Primary Blue for keywords in interview */
+        /* Interview summary strong text - Adjusted to new palette */
+        .interview-summary-item strong { color: #819A91; } /* Primary Greenish Grey for keywords in interview */
+        /* Pledge card styles - Adjusted to new palette */
         .pledge-card {
-            background-color: #E0F2FE;
-            border: 2px solid #2A62B6;
-            box-shadow: 0 10px 15px -3px rgba(42, 98, 182, 0.2), 0 4px 6px -2px rgba(42, 98, 182, 0.1);
+            background-color: #EEEFE0;
+            border: 2px solid #819A91;
+            box-shadow: 0 10px 15px -3px rgba(129, 154, 145, 0.2), 0 4px 6px -2px rgba(129, 154, 145, 0.1); /* Adjusted shadow to match new primary color */
         }
 
-        .bg-primary-blue { background-color: #2A62B6; }
-        .text-secondary-teal { color: #4ECDC4; }
-        .bg-supporting-light-blue { background-color: #E0F2FE; }
+        /* Tailwind custom color aliases - Adjusted to new palette */
+        .bg-primary-blue { background-color: #819A91; }
+        .text-secondary-teal { color: #A7C1A8; }
+        .bg-supporting-light-blue { background-color: #D1D8BE; }
         
         .chartjs-legend-item-text {
-            font-size: 11px !important; /* Smaller size for legend text as requested */
+            font-size: 12px !important; /* Smaller size for legend text as requested - UPDATED */
         }
         canvas {
             image-rendering: -moz-crisp-edges;
@@ -140,9 +146,9 @@ Constraints: Single HTML file, no external JS/CSS (except CDNs), no SVG/Mermaid.
             padding-bottom: 3rem; /* Add some space from the bottom of the viewport */
         }
 
-        /* Styles for header after it becomes visible (no longer sticky) */
+        /* Styles for header after it becomes visible (no longer sticky) - Adjusted to new palette */
         #mainHeader.header-revealed {
-            background-color: #2A62B6; /* Solid navy background */
+            background-color: #819A91; /* Solid background matching new primary blue */
             width: 100%; /* Ensure it takes full width */
             max-width: none; /* Override initial max-width */
             margin: 0; /* Remove auto margins */
@@ -152,19 +158,26 @@ Constraints: Single HTML file, no external JS/CSS (except CDNs), no SVG/Mermaid.
             transition: all 0.5s ease-in-out; /* Smooth transition for properties */
         }
         #mainHeader.header-revealed h1 {
-            font-size: 2.25rem; /* Smaller font for main title */
+            font-size: 2.75rem; /* Smaller font for main title - UPDATED */
             margin-bottom: 0.25rem;
         }
         #mainHeader.header-revealed p {
-            font-size: 1rem; /* Smaller font for subtitle */
+            font-size: 1.125rem; /* Smaller font for subtitle - UPDATED */
+        }
+
+        /* Highlight style for keywords */
+        .highlight-keyword {
+            color: #2D4F2B; /* Primary Greenish Grey for emphasis - UPDATED */
+            font-weight: 600; /* Make it a bit bolder */
         }
     </style>
 </head>
-<body class="antialiased text-base md:text-lg initial-view">
+<body class="antialiased text-lg md:text-xl initial-view"> <!-- UPDATED font size -->
     <!-- Header (only title visible initially, background handled by body gradient) -->
     <header id="mainHeader" class="text-white px-4 text-center w-full max-w-4xl mx-auto">
-        <h1 class="text-4xl md:text-5xl font-extrabold report-title-main mb-3">학습 도우미 AI, 어디까지 써야할까?</h1>
-        <p class="text-2xl md:text-3xl font-semibold mb-4">학생들의 생성형 AI 활용 실태와 학습 태도 분석</p>
+        <h1 class="text-5xl md:text-6xl font-extrabold report-title-main mb-3">학습 도우미 AI, 어디까지 써야할까?</h1> <!-- UPDATED font size -->
+        <p class="text-4xl md:text-4xl font-semibold mb-4">학생들의 생성형 AI 활용 실태와 학습 태도 분석</p> <!-- UPDATED font size -->
+        <p class="text-lg md:text-xl font-medium">4조 : 1405김동현, 1407김진수, 1410신수아, 1413이여설, 1415조유진</p> <!-- UPDATED text and font size -->
     </header>
 
     <!-- Scroll Down Arrows -->
@@ -186,51 +199,51 @@ Constraints: Single HTML file, no external JS/CSS (except CDNs), no SVG/Mermaid.
         <main class="container mx-auto p-4 md:p-8">
             <!-- Section 1: 조사 동기와 목적 -->
             <section id="motivation-purpose" class="mb-28 scroll-animate">
-                <h2 class="text-3xl md:text-4xl section-title-custom mt-8">1. 조사 동기와 목적</h2>
+                <h2 class="text-4xl md:text-5xl section-title-custom mt-8">1. 조사 동기와 목적</h2> <!-- UPDATED font size -->
                 <div class="grid md:grid-cols-2 gap-8">
                     <div class="card-custom p-7">
-                        <h3 class="text-2xl font-semibold text-primary-blue mb-4">가. 조사 동기</h3>
-                        <p class="text-gray-800 leading-relaxed">최근 AI 기술의 일상적 적용이 확대되면서, 학생들의 학습 및 과제 수행 시 AI 활용이 증가했다. 그러나 AI 의존도 증가에 따른 자기 주도 학습 능력 저하 우려가 제기되었다. 이에 본 조사는 AI 도움의 적정선과 스스로 학습해야 할 범위를 탐색하고자 시작되었다.</p>
+                        <h3 class="text-2xl md:text-3xl font-semibold text-primary-blue mb-4">가. 조사 동기</h3> <!-- UPDATED font size -->
+                        <p class="text-gray-800 leading-relaxed">최근 <span class="highlight-keyword">AI 기술의 일상적 적용</span>이 확대되면서, 학생들의 <span class="highlight-keyword">학습 및 과제 수행 시 AI 활용</span>이 증가했다. 그러나 <span class="highlight-keyword">AI 의존도 증가</span>에 따른 <span class="highlight-keyword">자기 주도 학습 능력 저하 우려</span>가 제기되었다. 이에 본 조사는 <span class="highlight-keyword">AI 도움의 적정선</span>과 <span class="highlight-keyword">스스로 학습해야 할 범위</span>를 탐색하고자 시작되었다.</p>
                     </div>
                     <div class="card-custom p-7">
-                        <h3 class="text-2xl font-semibold text-primary-blue mb-4">나. 조사 목적</h3>
-                        <p class="text-gray-800 leading-relaxed">본 조사는 AI를 적절히 활용하며 개인의 지식 함양과 사고력 증진 기준점을 모색하는 것을 목표로 한다. AI 의존 지양 및 학습 능력 신장 방법과 효과적인 AI 활용법을 균형 있게 파악하여, AI와 현명하게 공존하는 방향을 제안하고자 한다.</p>
+                        <h3 class="text-2xl md:text-3xl font-semibold text-primary-blue mb-4">나. 조사 목적</h3> <!-- UPDATED font size -->
+                        <p class="text-gray-800 leading-relaxed">본 조사는 <span class="highlight-keyword">AI를 적절히 활용</span>하며 <span class="highlight-keyword">개인의 지식 함양과 사고력 증진 기준점</span>을 모색하는 것을 목표로 한다. <span class="highlight-keyword">AI 의존 지양</span> 및 <span class="highlight-keyword">학습 능력 신장 방법</span>과 <span class="highlight-keyword">효과적인 AI 활용법</span>을 균형 있게 파악하여, <span class="highlight-keyword">AI와 현명하게 공존하는 방향</span>을 제안하고자 한다.</p>
                     </div>
                 </div>
             </section>
 
             <!-- Section 2: 조사 계획 -->
             <section id="research-plan" class="mb-28 scroll-animate">
-                <h2 class="text-3xl md:text-4xl section-title-custom">2. 조사 계획</h2>
+                <h2 class="text-4xl md:text-5xl section-title-custom">2. 조사 계획</h2> <!-- UPDATED font size -->
                 <div class="card-custom p-7">
                     <div class="grid md:grid-cols-3 gap-6 text-center">
                         <div>
                             <div class="bg-supporting-light-blue p-4 rounded-lg mb-3 inline-block">
-                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="#2A62B6" class="w-12 h-12 mx-auto">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="#819A91" class="w-12 h-12 mx-auto">
                                     <path stroke-linecap="round" stroke-linejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 0 1 2.25-2.25h13.5A2.25 2.25 0 0 1 21 7.5v11.25m-18 0A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75m-18 0v-7.5A2.25 2.25 0 0 1 5.25 9h13.5A2.25 2.25 0 0 1 21 11.25v7.5" />
                                 </svg>
                             </div>
-                            <h3 class="text-xl font-semibold text-primary-blue mb-2">가. 조사 기간</h3>
+                            <h3 class="text-2xl font-semibold text-primary-blue mb-2">가. 조사 기간</h3> <!-- UPDATED font size -->
                             <p class="text-gray-700">2025년 5월 12일 ~ 5월 23일</p>
                         </div>
                         <div>
                             <div class="bg-supporting-light-blue p-4 rounded-lg mb-3 inline-block">
                                 <!-- Changed person icon for "조사 대상" (Research Subjects) -->
-                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="#2A62B6" class="w-12 h-12 mx-auto">
-                                    <path stroke-linecap="round" stroke-linejoin="round" d="M17.982 18.725A7.488 7.488 0 0012 15.75a7.488 7.488 0 00-5.982 2.975m11.963 0a9 9 0 10-11.963 0m11.963 0A8.966 8.966 0 0112 21a8.966 8.966 0 01-5.982-2.275M15 9.75a3 3 0 11-6 0 3 3 0 016 0z" />
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="#819A91" class="w-12 h-12 mx-auto">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M17.982 18.725A7.488 7.488 0 0012 15.75a7.488 7.488 0 00-5.982 2.975m11.963 0a9 9 0 10-11.963 0m11.963 0A8.966 8.966 0 0112 21a8.966 9.0 0 01-5.982-2.275M15 9.75a3 3 0 11-6 0 3 3 0 016 0z" />
                                 </svg>
 
                             </div>
-                            <h3 class="text-xl font-semibold text-primary-blue mb-2">나. 조사 대상</h3>
-                            <p class="text-gray-700">미림마이스터고 뉴미디어 소프트웨어과 1학년 4반 18명, 조정모, 정재희 (총 20명)</p>
+                            <h3 class="text-2xl font-semibold text-primary-blue mb-2">나. 조사 대상</h3> <!-- UPDATED font size -->
+                            <p class="text-gray-700">미림마이스터고 뉴미디어 소프트웨어과 1학년 4반 18명</p>
                         </div>
                         <div>
                             <div class="bg-supporting-light-blue p-4 rounded-lg mb-3 inline-block">
-                                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="#2A62B6" class="w-12 h-12 mx-auto">
-                                     <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 6h9.75M10.5 6a1.5 1.5 0 1 1-3 0m3 0a1.5 1.5 0 1 0-3 0M3.75 6H7.5m3 12h9.75m-9.75 0a1.5 1.5 0 0 1-3 0m3 0a1.5 1.5 0 0 0-3 0m-3.75 0H7.5m9-6h3.75m-3.75 0a1.5 1.5 0 0 1-3 0m3 0a1.5 1.5 0 0 0-3 0m-9.75 0h9.75" />
+                                   <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="#819A91" class="w-12 h-12 mx-auto">
+                                       <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 6h9.75M10.5 6a1.5 1.5 0 1 1-3 0m3 0a1.5 1.5 0 1 0-3 0M3.75 6H7.5m3 12h9.75m-9.75 0a1.5 1.5 0 0 1-3 0m3 0a1.5 1.5 0 0 0-3 0m-3.75 0H7.5m9-6h3.75m-3.75 0a1.5 1.5 0 0 1-3 0m3 0a1.5 1.5 0 0 0-3 0m-9.75 0h9.75" />
                                 </svg>
                             </div>
-                            <h3 class="text-xl font-semibold text-primary-blue mb-2">다. 조사 방법</h3>
+                            <h3 class="text-2xl font-semibold text-primary-blue mb-2">다. 조사 방법</h3> <!-- UPDATED font size -->
                             <p class="text-gray-700">설문조사, 인터뷰</p>
                         </div>
                     </div>
@@ -239,14 +252,14 @@ Constraints: Single HTML file, no external JS/CSS (except CDNs), no SVG/Mermaid.
 
             <!-- Section 3: 조사 결과 -->
             <section id="research-results" class="mb-28 scroll-animate">
-                <h2 class="text-3xl md:text-4xl section-title-custom">3. 조사 결과</h2>
+                <h2 class="text-4xl md:text-5xl section-title-custom">3. 조사 결과</h2> <!-- UPDATED font size -->
                 
                 <div class="mb-16">
-                    <h3 class="text-2xl md:text-3xl font-semibold text-primary-blue mb-8 text-center">가. 설문조사 분석 결과</h3>
+                    <h3 class="text-3xl md:text-4xl font-semibold text-primary-blue mb-8 text-center">가. 설문조사 분석 결과</h3> <!-- UPDATED font size -->
                     <div class="grid md:grid-cols-1 lg:grid-cols-3 gap-8">
                         <!-- CHARTJS_Q1_SURVEY_EFFECTIVENESS -->
                         <div class="card-custom p-6 flex flex-col items-center">
-                            <h4 class="text-xl font-semibold mb-2 text-center">Q1. AI 도움, 어느 정도가 효과적일까?</h4>
+                            <h4 class="text-2xl font-semibold mb-2 text-center">Q1. AI 도움, 어느 정도가 효과적일까?</h4> <!-- UPDATED font size -->
                             <!-- Modified text under Q1 for better readability -->
                             <p class="text-base text-gray-700 mb-4 text-center">AI의 도움을 어느 정도까지 받는 것이 학습에 가장 효과적이라고 생각하나요?</p>
                             <div class="chart-container w-full h-72 md:h-80 lg:h-[350px]">
@@ -256,8 +269,8 @@ Constraints: Single HTML file, no external JS/CSS (except CDNs), no SVG/Mermaid.
 
                         <!-- CHARTJS_Q2_SURVEY_UNDERSTANDING -->
                         <div class="card-custom p-6 flex flex-col items-center">
-                            <h4 class="text-xl font-semibold mb-2 text-center">Q2. AI 답변, 얼마나 이해할까?</h4>
-                            <p class="text-sm text-gray-500 mb-4 text-center">AI가 답을 알려줄 때, 그 내용을 완전히 이해하고 넘어가는 편인가요?</p>
+                            <h4 class="text-2xl font-semibold mb-2 text-center">Q2. AI 답변, 얼마나 이해할까?</h4> <!-- UPDATED font size -->
+                            <p class="text-base text-gray-500 mb-4 text-center">AI가 답을 알려줄 때, 그 내용을 완전히 이해하고 넘어가는 편인가요?</p> <!-- UPDATED font size -->
                             <div class="chart-container w-full h-72 md:h-80 lg:h-[350px]">
                                 <canvas id="surveyChart2"></canvas>
                             </div>
@@ -265,65 +278,65 @@ Constraints: Single HTML file, no external JS/CSS (except CDNs), no SVG/Mermaid.
                         
                         <!-- CHARTJS_Q3_SURVEY_HINDRANCE -->
                         <div class="card-custom p-6 flex flex-col items-center">
-                            <h4 class="text-xl font-semibold mb-2 text-center">Q3. AI 사용, 사고력에 방해될까?</h4>
-                            <p class="text-sm text-gray-500 mb-4 text-center">생성형 AI 사용이 스스로 사고하는 능력이나 지식 쌓기에 방해가 된다고 느끼시나요?</p>
+                            <h4 class="text-2xl font-semibold mb-2 text-center">Q3. AI 사용, 사고력에 방해될까?</h4> <!-- UPDATED font size -->
+                            <p class="text-base text-gray-500 mb-4 text-center">생성형 AI 사용이 스스로 사고하는 능력이나 지식 쌓기에 방해가 된다고 느끼시나요?</p> <!-- UPDATED font size -->
                             <div class="chart-container w-full h-72 md:h-80 lg:h-[350px]">
                                 <canvas id="surveyChart3"></canvas>
                             </div>
                         </div>
                     </div>
                     <div class="card-custom p-7 mt-10">
-                        <h4 class="text-xl font-semibold text-primary-blue mb-4">설문 결과 요약</h4>
-                        <p class="text-gray-800 leading-relaxed mb-3">학생들은 AI를 유익한 도구로 인식하나, 신중하고 자기 주도적 활용을 중시했다. 필요한 순간에 힌트를 얻는 수준(52.6%)이 가장 적절하다는 의견이 많았다.</p>
-                        <p class="text-gray-800 leading-relaxed mb-3">대부분 학생(89.5%)은 AI 답변 내용을 이해하고 자기 것으로 만들려는 태도를 보여, AI 활용이 학습 효과에 긍정적일 수 있음을 시사했다.</p>
-                        <p class="text-gray-800 leading-relaxed">AI 사용이 사고력/지식 습득에 방해된다는 인식(36.8%)과 그렇지 않다는 인식(31.6%, 보통 31.6%)이 혼재하여, AI 영향에 대한 학생들의 인식이 다양함을 확인했다.</p>
+                        <h4 class="text-2xl font-semibold text-primary-blue mb-4">설문 결과 요약</h4> <!-- UPDATED font size -->
+                        <p class="text-gray-800 leading-relaxed mb-3">학생들은 <span class="highlight-keyword">AI를 유익한 도구로 인식</span>하나, <span class="highlight-keyword">신중하고 자기 주도적 활용</span>을 중시했다. 필요한 순간에 <span class="highlight-keyword">힌트를 얻는 수준(50%)</span>이 가장 적절하다는 의견이 많았고, <span class="highlight-keyword">기본 개념만 익힐 때 참고용(27.8%)</span>으로 사용하는 것이 좋다는 의견도 있었다.</p> <!-- UPDATED text -->
+                        <p class="text-gray-800 leading-relaxed mb-3">대부분 학생(<span class="highlight-keyword">94.5%</span>)은 <span class="highlight-keyword">AI 답변 내용을 이해하고 자기 것으로 만들려는 태도</span>를 보여, AI 활용이 학습 효과에 긍정적일 수 있음을 시사했다.</p> <!-- UPDATED text -->
+                        <p class="text-gray-800 leading-relaxed"><span class="highlight-keyword">AI 사용이 사고력/지식 습득에 방해된다는 인식(36.8%)</span>과 그렇지 않다는 인식(31.6%, 보통 31.6%)이 혼재하여, <span class="highlight-keyword">AI 영향에 대한 학생들의 인식이 다양함</span>을 확인했다.</p>
                     </div>
                 </div>
 
                 <div>
-                    <h3 class="text-2xl md:text-3xl font-semibold text-primary-blue mb-8 text-center">나. 개별 인터뷰 분석 결과</h3>
+                    <h3 class="text-3xl md:text-4xl font-semibold text-primary-blue mb-8 text-center">나. 개별 인터뷰 분석 결과</h3> <!-- UPDATED font size -->
                     <div class="grid md:grid-cols-2 gap-8">
                         <!-- HTML_CSS_DIAGRAM_INTERVIEW_SUMMARY_1 -->
                         <div class="card-custom p-7">
-                            <h4 class="text-xl font-semibold mb-4 text-center">인터뷰 1: 조정모 학생</h4>
+                            <h4 class="text-2xl font-semibold mb-4 text-center">인터뷰 1: 조정모 학생</h4> <!-- UPDATED font size -->
                             <!-- Image of Jo Jeong-mo Interview -->
-                            <img src="src/조정모 인터뷰_2.jpg" alt="조정모 학생 인터뷰 사진" class="w-full h-auto rounded-lg mb-5 shadow-md">
+                            <img src="src/조정모 인터뷰_2.jpg" alt="조정모 학생 인터뷰 사진" class="w-full h-auto rounded-lg mb-5 shadow-md" onerror="this.onerror=null;this.src='https://placehold.co/600x400/CCCCCC/333333?text=조정모+인터뷰+이미지';">
                             <div class="space-y-3 text-gray-800 leading-relaxed">
-                                <p class="interview-summary-item"><strong>인식:</strong> AI는 다양한 시각과 관점을 제시하는 도구. 자신이 생각 못한 방식 제시.</p>
-                                <p class="interview-summary-item"><strong>태도:</strong> AI 의존에 선을 그음. 스스로 해결 노력, AI는 보조 수단.</p>
-                                <p class="interview-summary-item"><strong>단점 언급:</strong> 가끔 어색한 표현, 부정확한 정보. 아직 사람만큼 신뢰는 아님.</p>
-                                <p class="interview-summary-item"><strong>사용 기준:</strong> 명확한 기준 없음. 상황에 따라 판단. (농담으로 "참참참" 언급)</p>
+                                <p class="interview-summary-item"><strong style="color: #819A91;">인식:</strong> AI는 다양한 시각과 관점을 제시하는 도구. 자신이 생각 못한 방식 제시.</p>
+                                <p class="interview-summary-item"><strong style="color: #819A91;">태도:</strong> AI 의존에 선을 그음. 스스로 해결 노력, AI는 보조 수단.</p>
+                                <p class="interview-summary-item"><strong style="color: #819A91;">단점 언급:</strong> 가끔 어색한 표현, 부정확한 정보. 아직 사람만큼 신뢰는 아님.</p>
+                                <p class="interview-summary-item"><strong style="color: #819A91;">사용 기준:</strong> 명확한 기준 없음. 상황에 따라 판단. (농담으로 "참참참" 언급)</p>
                             </div>
                             <div class="mt-5">
-                                <h5 class="font-semibold mb-3 text-base">주요 키워드:</h5>
+                                <h5 class="font-semibold mb-3 text-lg">주요 키워드:</h5> <!-- UPDATED font size -->
                                 <div class="flex flex-wrap">
                                     <span class="keyword-tag">다양한 시각</span> <span class="keyword-tag">보조 수단</span> <span class="keyword-tag">자기 주도</span> <span class="keyword-tag">부정확성</span> <span class="keyword-tag">신뢰도 문제</span> <span class="keyword-tag">기준 모호</span>
                                 </div>
                             </div>
                             <!-- Image of Jo Jeong-mo Word Cloud -->
-                            <img src="src/워드클라우드_정모.png" alt="조정모 학생 인터뷰 워드 클라우드" class="w-full h-auto rounded-lg mt-5 shadow-md">
+                            <img src="src/워드클라우드_정모.png" alt="조정모 학생 인터뷰 워드 클라우드" class="w-full h-auto rounded-lg mt-5 shadow-md" onerror="this.onerror=null;this.src='https://placehold.co/600x400/CCCCCC/333333?text=조정모+워드클라우드';">
                         </div>
 
                         <!-- HTML_CSS_DIAGRAM_INTERVIEW_SUMMARY_2 -->
                         <div class="card-custom p-7">
-                            <h4 class="text-xl font-semibold mb-4 text-center">인터뷰 2: 정재희 학생</h4>
+                            <h4 class="text-2xl font-semibold mb-4 text-center">인터뷰 2: 정재희 학생</h4> <!-- UPDATED font size -->
                             <!-- Image of Jeong Jae-hee Interview -->
-                            <img src="src/정재희 인터뷰_2.jpg" alt="정재희 학생 인터뷰 사진" class="w-full h-auto rounded-lg mb-5 shadow-md">
+                            <img src="src/정재희 인터뷰_2.jpg" alt="정재희 학생 인터뷰 사진" class="w-full h-auto rounded-lg mb-5 shadow-md" onerror="this.onerror=null;this.src='https://placehold.co/600x400/CCCCCC/333333?text=정재희+인터뷰+이미지';">
                                <div class="space-y-3 text-gray-800 leading-relaxed">
-                                    <p class="interview-summary-item"><strong>활용 방식:</strong> 코딩 테스트 준비 시 GPT 코드 단순 복사 아닌, 스스로 해석 및 이해 노력.</p>
-                                    <p class="interview-summary-item"><strong>효율성:</strong> 모르는 내용 검색보다 빠르게 정보 획득. 정보 탐색 도구로 활용.</p>
-                                    <p class="interview-summary-item"><strong>장단점 인식:</strong> 숙제 해결 도움(장점), 마감 직전 복붙 우려(단점).</p>
-                                    <p class="interview-summary-item"><strong>고민:</strong> 수행평가 AI 사용 시 정직하지 않다는 느낌. 도덕적 경계 모호.</p>
-                                    <p class="interview-summary-item"><strong>사용 기준:</strong> 별다른 기준 없이, 모르면 바로 GPT 활용.</p>
+                                    <p class="interview-summary-item"><strong style="color: #819A91;">활용 방식:</strong> 코딩 테스트 준비 시 GPT 코드 단순 복사 아닌, 스스로 해석 및 이해 노력.</p>
+                                    <p class="interview-summary-item"><strong style="color: #819A91;">효율성:</strong> 모르는 내용 검색보다 빠르게 정보 획득. 정보 탐색 도구로 활용.</p>
+                                    <p class="interview-summary-item"><strong style="color: #819A91;">장단점 인식:</strong> 숙제 해결 도움(장점), 마감 직전 복붙 우려(단점).</p>
+                                    <p class="interview-summary-item"><strong style="color: #819A91;">고민:</strong> 수행평가 AI 사용 시 정직하지 않다는 느낌. 도덕적 경계 모호.</p>
+                                    <p class="interview-summary-item"><strong style="color: #819A91;">사용 기준:</strong> 별다른 기준 없이, 모르면 바로 GPT 활용.</p>
                                 </div>
                                <div class="mt-5">
-                                    <h5 class="font-semibold mb-3 text-base">주요 키워드:</h5>
+                                    <h5 class="font-semibold mb-3 text-lg">주요 키워드:</h5> <!-- UPDATED font size -->
                                     <div class="flex flex-wrap">
-                                       <span class="keyword-tag">코드 해석</span> <span class="keyword-tag">자기 주도 학습</span> <span class="keyword-tag">빠른 정보 탐색</span> <span class="keyword-tag">효율성</span> <span class="keyword-tag">도덕적 고민</span> <span class="keyword-tag">기준 없음</span>
+                                        <span class="keyword-tag">코드 해석</span> <span class="keyword-tag">자기 주도 학습</span> <span class="keyword-tag">빠른 정보 탐색</span> <span class="keyword-tag">효율성</span> <span class="keyword-tag">도덕적 고민</span> <span class="keyword-tag">기준 없음</span>
                                     </div>
                                 </div>
                             <!-- Image of Jeong Jae-hee Word Cloud -->
-                            <img src="src/워드클라우드_재희.png" alt="정재희 학생 인터뷰 워드 클라우드" class="w-full h-auto rounded-lg mt-5 shadow-md">
+                            <img src="src/워드클라우드_재희.png" alt="정재희 학생 인터뷰 워드 클라우드" class="w-full h-auto rounded-lg mt-5 shadow-md" onerror="this.onerror=null;this.src='https://placehold.co/600x400/CCCCCC/333333?text=정재희+워드클라우드';">
                         </div>
                     </div>
                 </div>
@@ -331,61 +344,62 @@ Constraints: Single HTML file, no external JS/CSS (except CDNs), no SVG/Mermaid.
 
             <!-- Section 4: 결론 -->
             <section id="conclusion" class="mb-28 scroll-animate">
-                <h2 class="text-3xl md:text-4xl section-title-custom">4. 결론</h2>
+                <h2 class="text-4xl md:text-5xl section-title-custom">4. 결론</h2> <!-- UPDATED font size -->
                 <div class="card-custom p-7 mb-10">
-                    <h3 class="text-2xl font-semibold text-primary-blue mb-4">가. 조사 결과 종합 및 주요 발견점 요약</h3>
+                    <h3 class="text-2xl font-semibold text-primary-blue mb-4">가. 조사 결과 종합 및 주요 발견점 요약</h3> <!-- UPDATED font size -->
                     <ul class="list-disc list-inside text-gray-800 space-y-3 leading-relaxed">
-                        <li><strong>AI 활용 정도 인식:</strong> 학생들은 AI 과다 의존보다 적절한 활용(힌트 52.6%, 참고용 26.3%)을 선호, 학습 보조 도구로 인식했다.</li>
-                        <li><strong>AI 답변 이해도 및 학습 노력:</strong> 대다수(89.5%)가 AI 답변을 이해한다고 인식. AI 내용을 소화하려는 노력이 관찰되었다.</li>
-                        <li><strong>AI 사용의 방해 요인 인식:</strong> 36.8%는 AI 사용이 사고력/지식 축적에 방해된다고 우려. AI 영향에 대한 인식이 다양했다.</li>
-                        <li><strong>AI 사용 기준의 모호성:</strong> AI 사용 시점에 대한 명확한 기준이 없거나 개인별 차이가 존재했다.</li>
+                        <li><span class="highlight-keyword">AI 활용 정도 인식:</span> 학생들은 AI 과다 의존보다 <span class="highlight-keyword">적절한 활용(힌트 50%)</span>을 선호, 학습 보조 도구로 인식했다. <span class="highlight-keyword">기본 개념만 익힐 때 참고용(27.8%)</span>으로 사용하는 것이 좋다는 의견도 있었다.</li>
+                        <li><span class="highlight-keyword">AI 답변 이해도 및 학습 노력:</span> 대다수(<span class="highlight-keyword">94.5%</span>)가 AI 답변을 이해한다고 인식. <span class="highlight-keyword">AI 내용을 소화하려는 노력</span>이 관찰되었다.</li>
+                        <li><span class="highlight-keyword">AI 사용의 방해 요인 인식:</span> <span class="highlight-keyword">36.8%는 AI 사용이 사고력/지식 축적에 방해된다고 우려</span>. AI 영향에 대한 인식이 다양했다.</li>
+                        <li><span class="highlight-keyword">AI 사용 기준의 모호성:</span> AI 사용 시점에 대한 <span class="highlight-keyword">명확한 기준이 없거나 개인별 차이</span>가 존재했다.</li>
                     </ul>
                 </div>
 
                 <div class="card-custom p-7 mb-10">
-                    <h3 class="text-2xl font-semibold text-primary-blue mb-4">나. 조사를 통해 새롭게 알게 된 점 및 느낀 점</h3>
-                    <p class="text-gray-800 leading-relaxed mb-3">학생들은 AI를 학습 도구로 인식하며 적절한 사용 방식을 고민했다. AI 답변 해석 및 자기 지식화 노력은 긍정적이었다. 동시에 사고력 저하 우려, 사용 기준 부족, 정보 신뢰성 문제가 드러났다. 비판적 수용, 윤리적 인식, 자기주도 학습 태도의 중요성을 느꼈다.</p>
-                    <p class="text-gray-800 leading-relaxed">조사 결과는 한국청소년정책연구원의 연구와 유사점을 보이며, 청소년 세대 전체의 과제를 반영한다. AI를 사고 확장 동반자로 보고, 스스로 판단하는 힘이 중요하며, AI 리터러시 교육의 필요성을 시사한다.</p>
+                    <h3 class="text-2xl font-semibold text-primary-blue mb-4">나. 조사를 통해 새롭게 알게 된 점 및 느낀 점</h3> <!-- UPDATED font size -->
+                    <p class="text-gray-800 leading-relaxed mb-3">학생들은 <span class="highlight-keyword">AI를 학습 도구로 인식</span>하며 <span class="highlight-keyword">적절한 사용 방식</span>을 고민했다. <span class="highlight-keyword">AI 답변 해석 및 자기 지식화 노력은 긍정적</span>이었다. 동시에 <span class="highlight-keyword">사고력 저하 우려, 사용 기준 부족, 정보 신뢰성 문제</span>가 드러났다. <span class="highlight-keyword">비판적 수용, 윤리적 인식, 자기주도 학습 태도</span>의 중요성을 느꼈다.</p>
+                    <p class="text-gray-800 leading-relaxed">조사 결과는 <span class="highlight-keyword">한국청소년정책연구원의 연구와 유사점</span>을 보이며, <span class="highlight-keyword">청소년 세대 전체의 과제</span>를 반영한다. <span class="highlight-keyword">AI를 사고 확장 동반자로 보고, 스스로 판단하는 힘</span>이 중요하며, <span class="highlight-keyword">AI 리터러시 교육의 필요성</span>을 시사한다.</p>
                 </div>
                 
                 <div class="card-custom p-7 mb-10">
-                    <h3 class="text-2xl font-semibold text-primary-blue mb-4">다. 효과적인 AI 활용을 위한 제언</h3>
+                    <h3 class="text-2xl font-semibold text-primary-blue mb-4">다. 효과적인 AI 활용을 위한 제언</h3> <!-- UPDATED font size -->
                     <div class="space-y-5">
                         <div class="recommendation-item">
-                            <h4 class="font-semibold text-gray-900 text-lg">1. AI를 '답변기'가 아닌 '사고 확장 도구'로 활용하기</h4>
+                            <h4 class="font-semibold text-gray-900 text-lg">💡 1. AI를 '답변기'가 아닌 '사고 확장 도구'로 활용하기</h4>
                             <p class="text-gray-700">직접적인 답보다 아이디어 획득, 자신의 생각과 비교하며 사고 확장.</p>
                         </div>
                         <div class="recommendation-item">
-                            <h4 class="font-semibold text-gray-900 text-lg">2. AI 답변에 대한 비판적 검토 및 내재화 노력</h4>
+                            <h4 class="font-semibold text-gray-900 text-lg">🔍 2. AI 답변에 대한 비판적 검토 및 내재화 노력</h4>
                             <p class="text-gray-700">맹신하지 않고 스스로 이해, 검증하며 자신의 언어로 설명할 수 있도록 소화.</p>
                         </div>
                         <div class="recommendation-item">
-                            <h4 class="font-semibold text-gray-900 text-lg">3. 자신만의 AI 사용 기준 정립하기</h4>
+                            <h4 class="font-semibold text-gray-900 text-lg">🎯 3. 자신만의 AI 사용 기준 정립하기</h4>
                             <p class="text-gray-700">학습 목표, 과제 성격, 이해 수준 고려하여 구체적인 상황별 활용 원칙 수립.</p>
                         </div>
                         <div class="recommendation-item">
-                            <h4 class="font-semibold text-gray-900 text-lg">4. 윤리적인 AI 활용에 대한 인식 향상</h4>
+                            <h4 class="font-semibold text-gray-900 text-lg">⚖️ 4. 윤리적인 AI 활용에 대한 인식 향상</h4>
                             <p class="text-gray-700">단순 복붙 지양, 도움 받았음을 밝히고 자신만의 결과물 창조.</p>
                         </div>
                     </div>
                 </div>
 
                 <div class="card-custom p-8 pledge-card">
-                    <h3 class="text-2xl font-bold text-primary-blue mb-4">라. 우리의 다짐</h3>
+                    <h3 class="text-2xl font-bold text-primary-blue mb-4">라. 우리의 다짐</h3> <!-- UPDATED font size -->
                     <p class="text-gray-800 leading-relaxed font-medium">본 조사를 통해 생성형 AI의 효과적인 학습 활용에 대한 깊은 통찰을 얻었다. 앞으로 AI를 사용할 때, 조사 결과에서 나타난 우려들을 경계하고 제언한 내용들을 적극 실천하여, AI에 의존하기보다 AI와 함께 성장하며 스스로 생각하는 힘과 지식을 꾸준히 키워나갈 것을 다짐한다. 또한, 우리가 얻은 지식과 경험을 친구들과 공유하며, 다 함께 AI 시대를 현명하게 헤쳐나갈 수 있도록 노력할 것이다.</p>
                 </div>
             </section>
 
             <!-- Section 5: 참고자료 -->
             <section id="references" class="mb-24 scroll-animate">
-                <h2 class="text-3xl md:text-4xl section-title-custom">5. 참고자료</h2>
+                <h2 class="text-4xl md:text-5xl section-title-custom">5. 참고자료</h2> <!-- UPDATED font size -->
                 <div class="card-custom p-7">
                     <ul class="list-disc list-inside text-gray-800 space-y-3">
                         <li>인터뷰 전사 (조정모, 정재희 학생) - 미림마이스터고등학교 뉴미디어소프트웨어과 1학년 4반 (2025.5.)</li>
                         <li>조사 설문지 - 미림마이스터고 소프트웨어과 1학년 4반 학생 18명 대상 (2025)</li>
                         <li>AI 활용 교육 관련 문헌: 한국청소년정책연구원. (2024). 청소년의 생성형 AI 이용실태 및 리터러시 증진 방안 연구.</li>
+                        <li>공통국어 교과서 220p</li>
+                        <li>Chat GPT, Gemini, Wrtn, Perplexity</li>
                     </ul>
-                       <p class="text-sm text-gray-500 mt-5">세부 링크는 원본 보고서를 참조하십시오.</p>
                 </div>
             </section>
         </main>
@@ -447,10 +461,19 @@ Constraints: Single HTML file, no external JS/CSS (except CDNs), no SVG/Mermaid.
         }
 
         document.addEventListener('DOMContentLoaded', () => {
+            const totalRespondents = 18; // Define total number of respondents for calculations
+
             const body = document.body;
             const mainHeader = document.getElementById('mainHeader'); // Get the header element
             const fullContentWrapper = document.getElementById('fullContentWrapper');
             const scrollArrows = document.getElementById('scrollArrows');
+
+            // Add onerror to image tags for placeholder images if original is not found
+            document.querySelectorAll('img').forEach(img => {
+                if (!img.src.startsWith('http')) { // Only add onerror for local paths
+                    img.setAttribute('onerror', `this.onerror=null;this.src='https://placehold.co/600x400/CCCCCC/333333?text=${encodeURIComponent(img.alt || '이미지 없음')}';`);
+                }
+            });
 
             // Initially add 'initial-view' to body to center header and hide overflow
             body.classList.add('initial-view');
@@ -519,32 +542,54 @@ Constraints: Single HTML file, no external JS/CSS (except CDNs), no SVG/Mermaid.
 
 
             const chartColors = {
-                primaryBlue: '#2A62B6',
-                secondaryTeal: '#4ECDC4',
-                accentGrey: '#A9A9A9',
-                supportingLightBlue: '#E0F2FE',
-                pieSet: ['#2A62B6', '#4ECDC4', '#88AADE', '#A9A9A9', '#FFB1C1', '#FFD700'],
-                barSet1: ['#A9A9A9', '#E0F2FE', '#4ECDC4', '#2A62B6', '#1A4A8C'],
-                barSet2: ['#E0F2FE', '#4ECDC4', '#A9A9A9', '#FFCE56', '#FF6384'],
+                primaryGreenishGrey: '#819A91', // Main darker color from palette
+                secondaryLightGreen: '#A7C1A8', // Lighter greenish from palette
+                tertiaryLightGrey: '#D1D8BE',   // Even lighter greenish/grey
+                quaternaryOffWhite: '#EEEFE0',  // Lightest from palette
+                
+                // NEW gradient color scale based on user's request
+                gradientColorScale: [
+                    '#819A91', // Darkest
+                    '#84AE92',
+                    '#A7C1A8',
+                    '#D1D8BE',
+                    '#EEEFE0'  // Lightest
+                ],
+
+                darkText: '#263238', // Dark text as requested
+                lightBackground: '#F4F7F9', // Main background as requested
+                cardBackground: '#FFFFFF' // Card background as requested
             };
 
-            // Chart 1: AI 도움 정도 (Pie Chart)
+            // Chart 1: AI 도움 정도 (Pie Chart) - Corrected color application logic
             const q1Ctx = document.getElementById('surveyChart1')?.getContext('2d');
             if (q1Ctx) {
-                const q1Labels = [
+                const q1LabelsOriginal = [
                     "최소한으로만, 꼭 필요할 때만 사용해야 한다.", 
                     "기본 개념만 익힐 때 참고용으로 사용하는 것이 좋다", 
                     "중간중간 힌트를 받는 정도로 사용하는 것이 적절하다", 
                     "대부분 AI 도움을 받아 빠르게 해결하는 게 효율적이다", 
                     "가능한 모든 문제에 AI를 적극적으로 활용하는 게 좋다"
                 ];
+                // Data from user's provided snippet (n=18 for Q1)
+                const q1DataValuesOriginal = [11.1, 27.8, 50, 5.6, 5.6]; 
+
+                // Create an array of objects to sort by data value
+                const sortedQ1DataPoints = q1DataValuesOriginal.map((value, index) => ({
+                    value: value,
+                    label: q1LabelsOriginal[index]
+                })).sort((a, b) => b.value - a.value); // Sort descending by value
+
+                const q1LabelsSorted = sortedQ1DataPoints.map(item => item.label);
+                const q1DataValuesSorted = sortedQ1DataPoints.map(item => item.value);
+
                 const q1Data = {
-                    labels: q1Labels.map(label => wrapLabel(label, 16)),
+                    labels: q1LabelsSorted.map(label => wrapLabel(label, 16)), // Wrap sorted labels for display
                     datasets: [{
-                        label: '응답 비율 (%)',
-                        data: [10.5, 26.3, 52.6, 5.3, 5.3],
-                        backgroundColor: chartColors.pieSet,
-                        borderColor: '#FFFFFF',
+                        data: q1DataValuesSorted,
+                        backgroundColor: chartColors.gradientColorScale.slice(0, q1LabelsSorted.length), // Apply gradient from darkest to lightest
+                        hoverOffset: 8,
+                        borderColor: chartColors.cardBackground,
                         borderWidth: 2
                     }]
                 };
@@ -555,39 +600,24 @@ Constraints: Single HTML file, no external JS/CSS (except CDNs), no SVG/Mermaid.
                         legend: {
                             position: 'bottom',
                             labels: {
-                                font: { size: 11 }, // Reduced font size as requested
+                                font: { size: 12 }, // UPDATED font size
                                 boxWidth: 15,
+                                boxHeight: 15,
                                 padding: 15,
                                 generateLabels: function(chart) {
                                     const data = chart.data;
                                     if (data.labels.length && data.datasets.length) {
-                                        // Create an array of objects with original label, data, and index
-                                        const items = data.labels.map((labelArray, i) => {
+                                        return data.labels.map((labelArray, i) => {
+                                            const meta = chart.getDatasetMeta(0);
+                                            const style = meta.controller.getStyle(i); // Use 'i' directly as data is already sorted
                                             const dataValue = data.datasets[0].data[i];
                                             return {
-                                                originalLabel: q1Labels[i], // Store original unwrapped label
-                                                wrappedLabel: labelArray.join(' '), // Store wrapped label
-                                                dataValue: dataValue,
-                                                index: i
-                                            };
-                                        });
-
-                                        // Sort items by dataValue in descending order
-                                        items.sort((a, b) => b.dataValue - a.dataValue);
-
-                                        // Generate labels based on the sorted order
-                                        return items.map(function(item) {
-                                            const originalIndex = item.index; // Get original index
-                                            const meta = chart.getDatasetMeta(0);
-                                            const style = meta.controller.getStyle(originalIndex); // Use original index for style
-
-                                            return {
-                                                text: `${item.wrappedLabel} (${item.dataValue.toFixed(1)}%)`, // Add percentage to label
+                                                text: `${labelArray.join(' ')} (${dataValue.toFixed(1)}%)`, // Use already wrapped label
                                                 fillStyle: style.backgroundColor,
                                                 strokeStyle: style.borderColor,
                                                 lineWidth: style.borderWidth,
-                                                hidden: isNaN(data.datasets[0].data[originalIndex]) || meta.data[originalIndex].hidden,
-                                                index: originalIndex // Keep original index for Chart.js internal use
+                                                hidden: isNaN(dataValue) || meta.data[i].hidden,
+                                                index: i
                                             };
                                         });
                                     }
@@ -598,103 +628,167 @@ Constraints: Single HTML file, no external JS/CSS (except CDNs), no SVG/Mermaid.
                         tooltip: {
                             callbacks: {
                                 label: function(context) {
-                                    let labelText = context.dataset.label || '';
-                                    if (labelText) { labelText += ': '; }
-                                    if (context.parsed !== null) { labelText += context.parsed.toFixed(1) + '%'; }
-                                    return labelText;
+                                    let displayLabel = context.label;
+                                    if (Array.isArray(displayLabel)) {
+                                        displayLabel = displayLabel.join(' ');
+                                    }
+                                    const percentage = context.parsed.toFixed(1);
+                                    const count = Math.round((parseFloat(percentage) / 100) * totalRespondents);
+                                    return `${displayLabel}: ${percentage}% (${count}명)`;
                                 },
                                 title: function(tooltipItems) {
                                     if (tooltipItems.length > 0) {
-                                        // Use the original unwrapped label for the tooltip title
-                                        const originalLabel = q1Labels[tooltipItems[0].dataIndex];
-                                        return wrapLabel(originalLabel, 16).join(' '); // Re-wrap for tooltip title if needed
+                                        // Use the original label from the sorted list for tooltip title
+                                        return q1LabelsSorted[tooltipItems[0].dataIndex];
                                     }
                                     return '';
                                 }
                             }
                         }
                     },
-                    layout: { padding: { top: 5, bottom: 5, left: 5, right: 5 } }
+                    layout: {
+                        padding: 10 // Add some padding around the chart
+                    }
                 };
                 createChart(q1Ctx, 'pie', q1Data, q1Options);
             }
 
-            // Chart 2: AI 답변 이해도 (Bar Chart)
+            // Chart 2: AI 답변 이해도 (Bar Chart) - Reversed color gradient
             const q2Ctx = document.getElementById('surveyChart2')?.getContext('2d');
             if (q2Ctx) {
+                // New labels as requested
                 const q2Labels = ["전혀 그렇지 않다", "그렇지 않다", "보통이다", "그렇다", "매우 그렇다"];
+                // New data values for 18 respondents from user's snippet
+                const q2DataValues = [0, 0, 5.6, 66.7, 27.8]; 
+                
+                // Reverse the gradientColorScale for this chart
+                const reversedGradient = [...chartColors.gradientColorScale].reverse();
+
                 const q2Data = {
-                    labels: q2Labels,
+                    labels: q2Labels.map(label => wrapLabel(label, 12)), // Still wrap labels for axis ticks
                     datasets: [{
                         label: '응답 비율 (%)',
-                        data: [0, 0, 10.5, 63.2, 26.3],
-                        backgroundColor: chartColors.barSet1,
-                        borderColor: chartColors.primaryBlue,
+                        data: q2DataValues,
+                        // Apply reversed gradient so bottom is dark and top is light
+                        backgroundColor: reversedGradient.slice(0, q2Labels.length),
+                        borderColor: chartColors.primaryGreenishGrey, // Match primary color for border
                         borderWidth: 1,
-                        borderRadius: 4
+                        borderRadius: 5, // Add rounded corners to bars
                     }]
                 };
                 const q2Options = {
                     responsive: true,
                     maintainAspectRatio: false,
-                    indexAxis: 'y',
-                    plugins: {
-                        legend: { display: false },
-                        tooltip: {
-                            callbacks: {
-                                label: function(context) { return `${context.dataset.label || ''}: ${context.parsed.x.toFixed(1)}%`; }
-                            }
-                        }
-                    },
+                    indexAxis: 'y', // Make it a horizontal bar chart
                     scales: {
                         x: {
                             beginAtZero: true,
-                            max: 70,
-                            ticks: { callback: (value) => value + "%", font: { size: 10 } },
-                            title: { display: true, text: '응답 비율 (%)', font: { size: 11, weight: '500' } }
+                            max: 100, // Max percentage to allow for full scale
+                            title: {
+                                display: true,
+                                text: '비율 (%)',
+                                font: { size: 12, weight: '500' } // UPDATED font size
+                            },
+                            ticks: { callback: (value) => value + "%", font: { size: 11 } } // UPDATED font size
                         },
-                        y: { ticks: { font: { size: 11 } } }
+                        y: {
+                            ticks: {
+                                font: {
+                                    size: 11 // UPDATED font size
+                                }
+                            }
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            display: false // No legend needed for single dataset bar chart
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    let displayLabel = context.label;
+                                    if (Array.isArray(displayLabel)) { // context.label for bar charts usually a string, but safe check
+                                        displayLabel = displayLabel.join(' '); 
+                                    }
+                                    const percentage = context.parsed.x.toFixed(1);
+                                    const count = Math.round((parseFloat(percentage) / 100) * totalRespondents);
+                                    return `${displayLabel}: ${percentage}% (${count}명)`;
+                                },
+                                title: function(tooltipItems) {
+                                    return q2Labels[tooltipItems[0].dataIndex]; // Use original label for title
+                                }
+                            }
+                        }
                     },
                     layout: { padding: { top: 5, bottom: 5, left: 5, right: 10 } }
                 };
                 createChart(q2Ctx, 'bar', q2Data, q2Options);
             }
 
-            // Chart 3: AI 사용의 방해 여부 (Bar Chart)
+            // Chart 3: AI 사용, 사고력에 방해될까? (Horizontal Bar Chart)
             const q3Ctx = document.getElementById('surveyChart3')?.getContext('2d');
             if (q3Ctx) {
-                const q3Labels = ["전혀 그렇지 않다", "그렇지 않다", "보통이다", "그렇다", "매우 그렇다"];
+                const q3Labels = [
+                    "매우 그렇다", "그렇다", "보통이다", "아니다", "전혀 아니다"
+                ];
+                // New data values for 18 respondents from user's snippet
+                const q3DataValues = [10.5, 26.3, 31.6, 26.3, 5.3]; 
                 const q3Data = {
-                    labels: q3Labels,
+                    labels: q3Labels.map(label => wrapLabel(label, 12)), // Still wrap labels for axis ticks
                     datasets: [{
                         label: '응답 비율 (%)',
-                        data: [5.3, 26.3, 31.6, 26.3, 10.5],
-                        backgroundColor: chartColors.barSet2,
-                        borderColor: chartColors.accentGrey,
+                        data: q3DataValues,
+                        // For horizontal bar chart (indexAxis: 'y'), colors are applied from bottom (index 0) to top.
+                        // So, using slice(0, length) with a gradient scale already means darkest to lightest from bottom to top.
+                        backgroundColor: chartColors.gradientColorScale.slice(0, q3Labels.length),
+                        borderColor: chartColors.primaryGreenishGrey, // Match primary color for border
                         borderWidth: 1,
-                        borderRadius: 4
+                        borderRadius: 5, // Add rounded corners to bars
                     }]
                 };
                 const q3Options = {
                     responsive: true,
                     maintainAspectRatio: false,
-                    indexAxis: 'y',
-                    plugins: {
-                        legend: { display: false },
-                        tooltip: {
-                            callbacks: {
-                                label: function(context) { return `${context.dataset.label || ''}: ${context.parsed.x.toFixed(1)}%`; }
-                            }
-                        }
-                    },
+                    indexAxis: 'y', // Make it a horizontal bar chart
                     scales: {
                         x: {
                             beginAtZero: true,
-                            max: 35,
-                            ticks: { callback: (value) => value + "%", font: { size: 10 } },
-                            title: { display: true, text: '응답 비율 (%)', font: { size: 11, weight: '500' } }
+                            max: 35, // Max percentage based on the data
+                            title: {
+                                display: true,
+                                text: '비율 (%)',
+                                font: { size: 12, weight: '500' } // UPDATED font size
+                            },
+                            ticks: { callback: (value) => value + "%", font: { size: 11 } } // UPDATED font size
                         },
-                        y: { ticks: { font: { size: 11 } } }
+                        y: {
+                            ticks: {
+                                font: {
+                                    size: 11 // UPDATED font size
+                                }
+                            }
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            display: false
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    let displayLabel = context.label;
+                                    if (Array.isArray(displayLabel)) { // context.label for bar charts usually a string, but safe check
+                                        displayLabel = displayLabel.join(' '); 
+                                    }
+                                    const percentage = context.parsed.x.toFixed(1);
+                                    const count = Math.round((parseFloat(percentage) / 100) * totalRespondents);
+                                    return `${displayLabel}: ${percentage}% (${count}명)`;
+                                },
+                                title: function(tooltipItems) {
+                                    return q3Labels[tooltipItems[0].dataIndex]; // Use original label for title
+                                }
+                            }
+                        }
                     },
                     layout: { padding: { top: 5, bottom: 5, left: 5, right: 10 } }
                 };
