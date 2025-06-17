@@ -483,13 +483,18 @@ const chartColors = {
 
 // Function to create a Chart.js instance (kept for general utility if needed elsewhere)
 function createChart(ctx, type, data, options) {
-    if (ctx) {
-        new Chart(ctx, {
-            type: type,
-            data: data,
-            options: options
-        });
+    // Destroy existing chart instance before creating a new one
+    // 새 차트를 만들기 전에 기존 차트 인스턴스를 파괴합니다.
+    let existingChart = Chart.getChart(ctx);
+    if (existingChart) {
+        console.log(`Destroying existing chart for ${ctx.canvas.id}`);
+        existingChart.destroy();
     }
+    return new Chart(ctx, {
+        type: type,
+        data: data,
+        options: options
+    });
 }
 
 // Custom tooltip positioner to offset from the cursor
@@ -522,11 +527,16 @@ Chart.Tooltip.positioners.customOffset = function(items, eventPosition) {
 
 // Function to initialize all charts with animation
 const initializeAllCharts = () => {
-    if (chartsInitialized) return; // Prevent re-initialization
+    console.log("initializeAllCharts called. chartsInitialized:", chartsInitialized); // Debug log
+    if (chartsInitialized) {
+        console.log("Charts already initialized, skipping. Set chartsInitialized to false to re-animate.");
+        return; // Prevent re-initialization
+    }
 
     // Chart 1: AI 도움 정도 (Pie Chart)
     const q1Ctx = document.getElementById('surveyChart1')?.getContext('2d');
     if (q1Ctx) {
+        console.log("Q1 Canvas context found."); // Debug log
         const q1LabelsOriginal = [
             "중간중간 힌트를 받는 정도로 사용하는 것이 적절하다", // 50%
             "기본 개념만 익힐 때 참고용으로 사용하는 것이 좋다",
@@ -619,12 +629,16 @@ const initializeAllCharts = () => {
                 padding: 10
             }
         };
-        surveyChart1Instance = new Chart(q1Ctx, { type: 'pie', data: q1Data, options: q1Options });
+        surveyChart1Instance = createChart(q1Ctx, 'pie', q1Data, q1Options);
+        console.log("Q1 Chart created:", surveyChart1Instance); // Debug log
+    } else {
+        console.error("Q1 Canvas context not found!");
     }
 
     // Chart 2: AI 답변 이해도 (Bar Chart)
     const q2Ctx = document.getElementById('surveyChart2')?.getContext('2d');
     if (q2Ctx) {
+        console.log("Q2 Canvas context found."); // Debug log
         const q2Labels = ["전혀 그렇지 않다", "그렇지 않다", "보통이다", "그렇다", "매우 그렇다"];
         const q2DataValues = [0, 0, 5.6, 66.7, 27.8]; 
         
@@ -696,12 +710,16 @@ const initializeAllCharts = () => {
             },
             layout: { padding: { top: 5, bottom: 5, left: 5, right: 10 } }
         };
-        surveyChart2Instance = new Chart(q2Ctx, { type: 'bar', data: q2Data, options: q2Options });
+        surveyChart2Instance = createChart(q2Ctx, 'bar', q2Data, q2Options);
+        console.log("Q2 Chart created:", surveyChart2Instance); // Debug log
+    } else {
+        console.error("Q2 Canvas context not found!");
     }
 
     // Chart 3: AI 사용, 사고력에 방해될까? (Horizontal Bar Chart)
     const q3Ctx = document.getElementById('surveyChart3')?.getContext('2d');
     if (q3Ctx) {
+        console.log("Q3 Canvas context found."); // Debug log
         const q3Labels = [
             "전혀 그렇지 않다", "그렇지 않다", "보통이다", "그렇다", "매우 그렇다"
         ];
@@ -775,9 +793,13 @@ const initializeAllCharts = () => {
             },
             layout: { padding: { top: 5, bottom: 5, left: 5, right: 10 } }
         };
-        surveyChart3Instance = new Chart(q3Ctx, { type: 'bar', data: q3Data, options: q3Options });
+        surveyChart3Instance = createChart(q3Ctx, 'bar', q3Data, q3Options);
+        console.log("Q3 Chart created:", surveyChart3Instance); // Debug log
+    } else {
+        console.error("Q3 Canvas context not found!");
     }
     chartsInitialized = true; // Set flag after initialization
+    console.log("Charts initialized successfully."); // Debug log
 };
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -827,20 +849,35 @@ document.addEventListener('DOMContentLoaded', () => {
     // Set up Intersection Observer for the charts section to trigger animation
     const chartSection = document.getElementById('research-results');
     if (chartSection) {
-        const chartObserver = new IntersectionObserver((entries, observer) => {
+        console.log("Observing #research-results for chart initialization."); // Debug log
+        const chartObserver = new IntersectionObserver((entries) => { // Removed 'observer' from params as we're explicitly unobserving/re-observing
             entries.forEach(entry => {
-                if (entry.isIntersecting && !chartsInitialized) { // Check chartsInitialized flag
-                    initializeAllCharts(); // Call the function to create charts with animation
-                    observer.unobserve(entry.target); // Stop observing once charts are initialized
+                if (entry.isIntersecting) {
+                    if (!chartsInitialized) { // Only initialize if not already initialized
+                        console.log("#research-results is intersecting. Initializing charts..."); // Debug log
+                        initializeAllCharts(); // Call the function to create charts with animation
+                    } else {
+                        console.log("#research-results is intersecting, charts already initialized."); // Debug log
+                    }
+                } else {
+                    // When the chart section leaves the viewport, reset the flag and destroy charts
+                    if (chartsInitialized) {
+                        console.log("#research-results leaving viewport. Resetting chartsInitialized to false and destroying charts.");
+                        chartsInitialized = false; // Reset flag
+                        if (surveyChart1Instance) { surveyChart1Instance.destroy(); surveyChart1Instance = null; }
+                        if (surveyChart2Instance) { surveyChart2Instance.destroy(); surveyChart2Instance = null; }
+                        if (surveyChart3Instance) { surveyChart3Instance.destroy(); surveyChart3Instance = null; }
+                    }
                 }
             });
         }, {
             threshold: 0.2 // Trigger when 20% of the section is visible
         });
         chartObserver.observe(chartSection);
+    } else {
+        console.error("#research-results section not found!"); // Debug log
     }
 });
-
     </script>
 </body>
 </html>
