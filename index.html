@@ -438,6 +438,7 @@ Constraints: Single HTML file, no external JS/CSS (except CDNs), no SVG/Mermaid.
     <!-- 이 HTML 인포그래픽은 학생 보고서의 내용을 시각화한 것입니다. Chart.js와 Tailwind CSS가 사용되었습니다. -->
 
     <script>
+
         // Helper function for label wrapping (한국어 약 16자 기준)
         function wrapLabel(str, maxWidth) {
             if (!str) return [''];
@@ -570,31 +571,32 @@ Constraints: Single HTML file, no external JS/CSS (except CDNs), no SVG/Mermaid.
                 tertiaryLightGrey: '#D1D8BE',   // Even lighter greenish/grey
                 quaternaryOffWhite: '#EEEFE0',  // Lightest from palette
                 
-                // !!NEW gradient color scale based on user's request
-                gradientColorScale: [
-                     // Darkest (from new highlight color)
-                    '#7A8E6F',
-                    '#819A91',
-                    '#A7C1A8',
-                    '#D1D8BE', 
-                    '#EEEFE0' // Lightest
-                ],
-                // A secondary lighter scale based on user's provided list for a softer look
-                softerGradientScale: [
-                    '#EEEFE0', // Lightest, for the bottom of reversed bars (Q2)
-                    '#D1D8BE',
-                    '#A7C1A8',
-                    '#819A91', // A bit darker to ensure distinction
-                    '#7A8E6F'  // Darkest for the start of Q3
+                // New explicit palette for Q1 Pie Chart, ordered from darkest to lightest.
+                // This array dictates the color applied based on the sorted rank of data values.
+                q1PieColors: [
+                    '#2E7D4F', // Darkest, for highest data value (50%)
+                    '#4BA76E', // Next darkest (27.8%)
+                    '#6EC27E', // Middle (11.1%)
+                    '#A3D977', // Next lightest (5.6%)
+                    '#D4ED91'  // Lightest, for lowest data value (5.6%)
                 ],
 
+                // Gradient for bar charts (Q2, Q3), ordered from darkest to lightest.
+                // This array will be applied directly to `backgroundColor` for "bottom darkest, top lightest" effect.
+                barChartGradient: [
+                    '#7A8E6F', // Darkest (for bottom bar, if data order is bottom to top)
+                    '#819A91',
+                    '#A7C1A8',
+                    '#D1D8BE',
+                    '#EEEFE0'  // Lightest (for top bar)
+                ],
 
                 darkText: '#263238', // Dark text as requested
                 lightBackground: '#F4F7F9', // Main background as requested
                 cardBackground: '#FFFFFF' // Card background as requested
             };
 
-            // Chart 1: AI 도움 정도 (Pie Chart) - Corrected color application logic
+            // Chart 1: AI 도움 정도 (Pie Chart) - Fix to preserve original slice order while applying ranked colors
             const q1Ctx = document.getElementById('surveyChart1')?.getContext('2d');
             if (q1Ctx) {
                 const q1LabelsOriginal = [
@@ -607,20 +609,29 @@ Constraints: Single HTML file, no external JS/CSS (except CDNs), no SVG/Mermaid.
                 // Data from user's provided snippet (n=18 for Q1)
                 const q1DataValuesOriginal = [11.1, 27.8, 50, 5.6, 5.6]; 
 
-                // Create an array of objects to sort by data value
-                const sortedQ1DataPoints = q1DataValuesOriginal.map((value, index) => ({
+                // Create a mapping of original index to data value for sorting purposes
+                const indexedData = q1DataValuesOriginal.map((value, index) => ({
                     value: value,
-                    label: q1LabelsOriginal[index]
-                })).sort((a, b) => b.value - a.value); // Sort descending by value
+                    originalIndex: index
+                }));
 
-                const q1LabelsSorted = sortedQ1DataPoints.map(item => item.label);
-                const q1DataValuesSorted = sortedQ1DataPoints.map(item => item.value);
+                // Sort the indexed data by value in descending order
+                indexedData.sort((a, b) => b.value - a.value);
+
+                // Create a new array for background colors, initialized with empty values
+                const backgroundColors = new Array(q1LabelsOriginal.length);
+
+                // Assign colors from the `q1PieColors` palette based on the sorted order,
+                // but store them back in the `backgroundColors` array at their original index.
+                indexedData.forEach((item, sortedRank) => {
+                    backgroundColors[item.originalIndex] = chartColors.q1PieColors[sortedRank];
+                });
 
                 const q1Data = {
-                    labels: q1LabelsSorted.map(label => wrapLabel(label, 16)), // Wrap sorted labels for display
+                    labels: q1LabelsOriginal.map(label => wrapLabel(label, 16)), // Use original labels to preserve order
                     datasets: [{
-                        data: q1DataValuesSorted,
-                        backgroundColor: chartColors.gradientColorScale.slice(0, q1LabelsSorted.length), // Apply gradient from darkest to lightest
+                        data: q1DataValuesOriginal, // Use original data values
+                        backgroundColor: backgroundColors, // Apply colors based on original index and sorted value rank
                         hoverOffset: 8,
                         borderColor: chartColors.cardBackground,
                         borderWidth: 2
@@ -633,7 +644,7 @@ Constraints: Single HTML file, no external JS/CSS (except CDNs), no SVG/Mermaid.
                         legend: {
                             position: 'bottom',
                             labels: {
-                                font: { size: 12 }, // UPDATED font size
+                                font: { size: 12 },
                                 boxWidth: 15,
                                 boxHeight: 15,
                                 padding: 15,
@@ -671,8 +682,8 @@ Constraints: Single HTML file, no external JS/CSS (except CDNs), no SVG/Mermaid.
                                 },
                                 title: function(tooltipItems) {
                                     if (tooltipItems.length > 0) {
-                                        // Use the original label from the sorted list for tooltip title
-                                        return q1LabelsSorted[tooltipItems[0].dataIndex];
+                                        // Use the original label from the original list for tooltip title
+                                        return q1LabelsOriginal[tooltipItems[0].dataIndex];
                                     }
                                     return '';
                                 }
@@ -685,6 +696,7 @@ Constraints: Single HTML file, no external JS/CSS (except CDNs), no SVG/Mermaid.
                 };
                 createChart(q1Ctx, 'pie', q1Data, q1Options);
             }
+
 
             // Chart 2: AI 답변 이해도 (Bar Chart) - Reversed color gradient
             const q2Ctx = document.getElementById('surveyChart2')?.getContext('2d');
@@ -843,6 +855,7 @@ Constraints: Single HTML file, no external JS/CSS (except CDNs), no SVG/Mermaid.
                 createChart(q3Ctx, 'bar', q3Data, q3Options);
             }
         });
+    
     </script>
 </body>
 </html>
