@@ -407,386 +407,440 @@ Constraints: Single HTML file, no external JS/CSS (except CDNs), no SVG/Mermaid.
 
     <script>
         // Helper function for label wrapping (한국어 약 16자 기준)
-        function wrapLabel(str, maxWidth) {
-            if (!str) return [''];
-            const lines = [];
-            let currentLine = "";
-            const words = str.split(/([\s\(\)\[\]\{\},.;:?\!]+)/); // 공백 및 주요 구두점 기준으로 분리 (유지)
-            
-            for (let i = 0; i < words.length; i++) {
-                const segment = words[i];
-                // Check if adding the segment exceeds maxWidth and it's not just a delimiter/space
-                if (currentLine.length + segment.length > maxWidth && currentLine.length > 0 && !segment.match(/^[\s\(\)\[\]\{\},.;:?\!]+$/)) {
-                    lines.push(currentLine.trim());
-                    currentLine = "";
-                }
-                currentLine += segment;
-            }
-            if (currentLine.trim().length > 0) {
-                lines.push(currentLine.trim());
-            }
-            
-            // Fallback for long single words or if no breaks were made but it's long
-            if (lines.length === 0 && str.length > 0) {
-                let forcedLines = [];
-                for(let k=0; k < str.length; k += maxWidth) {
-                    forcedLines.push(str.substring(k, Math.min(str.length, k + maxWidth)));
-                }
-                return forcedLines.length > 0 ? forcedLines : [str];
-            } else if (lines.length === 0 && str.length === 0) {
-                return [''];
-            } else if (lines.length === 0) {
-                return [str];
-            }
-            return lines;
+function wrapLabel(str, maxWidth) {
+    if (!str) return [''];
+    const lines = [];
+    let currentLine = "";
+    const words = str.split(/([\s\(\)\[\]\{\},.;:?\!]+)/); // 공백 및 주요 구두점 기준으로 분리 (유지)
+    
+    for (let i = 0; i < words.length; i++) {
+        const segment = words[i];
+        // Check if adding the segment exceeds maxWidth and it's not just a delimiter/space
+        if (currentLine.length + segment.length > maxWidth && currentLine.length > 0 && !segment.match(/^[\s\(\)\[\]\{\},.;:?\!]+$/)) {
+            lines.push(currentLine.trim());
+            currentLine = "";
         }
-
-        function createChart(ctx, type, data, options) {
-            if (ctx) {
-                new Chart(ctx, {
-                    type: type,
-                    data: data,
-                    options: options
-                });
-            }
+        currentLine += segment;
+    }
+    if (currentLine.trim().length > 0) {
+        lines.push(currentLine.trim());
+    }
+    
+    // Fallback for long single words or if no breaks were made but it's long
+    if (lines.length === 0 && str.length > 0) {
+        let forcedLines = [];
+        for(let k=0; k < str.length; k += maxWidth) {
+            forcedLines.push(str.substring(k, Math.min(str.length, k + maxWidth)));
         }
+        return forcedLines.length > 0 ? forcedLines : [str];
+    } else if (lines.length === 0 && str.length === 0) {
+        return [''];
+    } else if (lines.length === 0) {
+        return [str];
+    }
+    return lines;
+}
 
-        document.addEventListener('DOMContentLoaded', () => {
-            const totalRespondents = 18; // Define total number of respondents for calculations
+// Global variables for chart instances and initialization flag
+let surveyChart1Instance = null;
+let surveyChart2Instance = null;
+let surveyChart3Instance = null;
+let chartsInitialized = false; // Flag to ensure charts are initialized only once
 
-            const splashScreen = document.getElementById('splashScreen');
-            const scrollArrowsSplash = document.getElementById('scrollArrowsSplash');
-            const mainHeaderContent = document.getElementById('mainHeaderContent');
-            const fullContentWrapper = document.getElementById('fullContentWrapper');
+// Define totalRespondents and chartColors globally or within initializeAllCharts
+const totalRespondents = 18; // Define total number of respondents for calculations
 
-            // Add onerror to image tags for placeholder images if original is not found
-            document.querySelectorAll('img').forEach(img => {
-                if (!img.src.startsWith('http')) { // Only add onerror for local paths
-                    img.setAttribute('onerror', `this.onerror=null;this.src='https://placehold.co/600x400/CCCCCC/333333?text=${encodeURIComponent(img.alt || '이미지 없음')}';`);
-                }
-            });
+const chartColors = {
+    primaryGreenishGrey: '#819A91', // Main darker color from palette
+    secondaryLightGreen: '#A7C1A8', // Lighter greenish from palette
+    tertiaryLightGrey: '#D1D8BE',   // Even lighter greenish/grey
+    quaternaryOffWhite: '#EEEFE0',  // Lightest from palette
+    
+    // New explicit palette for Q1 Pie Chart, ordered from darkest to lightest.
+    // This array dictates the color applied based on the sorted rank of data values.
+    q1PieColors: [
+        '#2E7D4F', // Darkest, for highest data value (50%)
+        '#4BA76E', // Next darkest (27.8%)
+        '#6EC27E', // Middle (11.1%)
+        '#A3D977', // Next lightest (5.6%)
+        '#D4ED91'  // Lightest, for lowest data value (5.6%)
+    ],
 
-            // Click listener for scroll arrows on the splash screen
-            scrollArrowsSplash.addEventListener('click', () => {
-                // Add fade-out class to splash screen
-                splashScreen.classList.add('fade-out');
-                
-                // Show the main content header
-                mainHeaderContent.classList.add('show-header');
+    // Gradient for bar charts (Q2, Q3), ordered from darkest to lightest.
+    // This array will be applied directly to `backgroundColor` for "bottom darkest, top lightest" effect.
+    barChartGradient: [
+        '#7A8E6F', // Darkest (for bottom bar, if data order is bottom to top)
+        '#819A91',
+        '#A7C1A8',
+        '#D1D8BE',
+        '#EEEFE0'  // Lightest (for top bar)
+    ],
 
-                // Make the full content wrapper visible and trigger its slide-down transition
-                fullContentWrapper.classList.add('is-visible');
+    darkText: '#263238', // Dark text as requested
+    lightBackground: '#F4F7F9', // Main background as requested
+    cardBackground: '#FFFFFF' // Card background as requested
+};
 
-                // Smoothly scroll to the top after the content has slid down
-                setTimeout(() => {
-                    window.scrollTo({
-                        top: 0,
-                        behavior: "smooth"
-                    });
-                }, 1000); // Adjust delay to match splashScreen transition
-            });
+// Function to create a Chart.js instance (kept for general utility if needed elsewhere)
+function createChart(ctx, type, data, options) {
+    if (ctx) {
+        new Chart(ctx, {
+            type: type,
+            data: data,
+            options: options
+        });
+    }
+}
 
-            // Scroll Animation Logic for sections (remains active after initial reveal)
-            const animatedElements = document.querySelectorAll('.scroll-animate');
-            const observer = new IntersectionObserver((entries) => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        entry.target.classList.add('is-visible');
-                    } else {
-                        // Optional: remove is-visible class when element scrolls out of view
-                        // entry.target.classList.remove('is-visible');
+// Custom tooltip positioner to offset from the cursor
+// 툴팁을 마우스 커서에서 오프셋하여 표시하는 커스텀 포지셔너
+Chart.Tooltip.positioners.customOffset = function(items, eventPosition) {
+    // 'this' 컨텍스트는 툴팁 모델입니다.
+    const chart = this.chart;
+    const tooltip = this;
+    const offset = 15; // 원하는 오프셋 (픽셀)
+
+    let x = eventPosition.x + offset;
+    let y = eventPosition.y + offset;
+
+    // 기본적인 경계 검사 (복잡한 레이아웃에는 더 견고한 검사가 필요할 수 있습니다)
+    // 툴팁이 차트 영역을 벗어나지 않도록 조정합니다.
+    if (x + tooltip.width > chart.width) {
+        x = eventPosition.x - tooltip.width - offset;
+    }
+    if (y + tooltip.height > chart.height) {
+        y = eventPosition.y - tooltip.height - offset;
+    }
+
+    // 왼쪽/상단 경계도 확인하여 너무 벗어나지 않도록 합니다.
+    if (x < 0) x = 0;
+    if (y < 0) y = 0;
+
+    return { x: x, y: y };
+};
+
+
+// Function to initialize all charts with animation
+const initializeAllCharts = () => {
+    if (chartsInitialized) return; // Prevent re-initialization
+
+    // Chart 1: AI 도움 정도 (Pie Chart)
+    const q1Ctx = document.getElementById('surveyChart1')?.getContext('2d');
+    if (q1Ctx) {
+        const q1LabelsOriginal = [
+            "중간중간 힌트를 받는 정도로 사용하는 것이 적절하다", // 50%
+            "기본 개념만 익힐 때 참고용으로 사용하는 것이 좋다",
+            "최소한으로만, 꼭 필요할 때만 사용해야 한다.",
+            "대부분 AI 도움을 받아 빠르게 해결하는 게 효율적이다", 
+            "가능한 모든 문제에 AI를 적극적으로 활용하는 게 좋다"
+        ];
+        const q1DataValuesOriginal = [50, 27.8, 11.1, 5.6, 5.6]; 
+
+        const indexedData = q1DataValuesOriginal.map((value, index) => ({
+            value: value,
+            originalIndex: index
+        }));
+        indexedData.sort((a, b) => b.value - a.value);
+
+        const backgroundColors = new Array(q1LabelsOriginal.length);
+        indexedData.forEach((item, sortedRank) => {
+            backgroundColors[item.originalIndex] = chartColors.q1PieColors[sortedRank];
+        });
+
+        const q1Data = {
+            labels: q1LabelsOriginal.map(label => wrapLabel(label, 16)),
+            datasets: [{
+                data: q1DataValuesOriginal,
+                backgroundColor: backgroundColors,
+                hoverOffset: 8,
+                borderColor: chartColors.cardBackground,
+                borderWidth: 2
+            }]
+        };
+        const q1Options = {
+            responsive: true,
+            maintainAspectRatio: false,
+            animation: {
+                animateRotate: true, // Pie chart rotates into view
+                animateScale: true,  // Pie chart scales up
+                duration: 2000 // Animation duration in milliseconds (Increased for visibility)
+            },
+            plugins: {
+                legend: {
+                    position: 'bottom',
+                    labels: {
+                        font: { size: 12 },
+                        boxWidth: 15,
+                        boxHeight: 15,
+                        padding: 15,
+                        generateLabels: function(chart) {
+                            const data = chart.data;
+                            if (data.labels.length && data.datasets.length) {
+                                return data.labels.map((labelArray, i) => {
+                                    const meta = chart.getDatasetMeta(0);
+                                    const style = meta.controller.getStyle(i);
+                                    const dataValue = data.datasets[0].data[i];
+                                    return {
+                                        text: `${labelArray.join(' ')} (${dataValue.toFixed(1)}%)`,
+                                        fillStyle: style.backgroundColor,
+                                        strokeStyle: style.borderColor,
+                                        lineWidth: style.borderWidth,
+                                        hidden: isNaN(dataValue) || meta.data[i].hidden,
+                                        index: i
+                                    };
+                                });
+                            }
+                            return [];
+                        }
                     }
-                });
-            }, {
-                threshold: 0.1
-            });
-
-            // Observe elements after fullContentWrapper is visible
-            fullContentWrapper.addEventListener('transitionend', function handler(event) {
-                if (event.propertyName === 'transform' && fullContentWrapper.classList.contains('is-visible')) {
-                    animatedElements.forEach(el => {
-                        observer.observe(el);
-                    });
-                    this.removeEventListener('transitionend', handler);
-                }
-            });
-
-
-            const chartColors = {
-                primaryGreenishGrey: '#819A91', // Main darker color from palette
-                secondaryLightGreen: '#A7C1A8', // Lighter greenish from palette
-                tertiaryLightGrey: '#D1D8BE',   // Even lighter greenish/grey
-                quaternaryOffWhite: '#EEEFE0',  // Lightest from palette
-                
-                // New explicit palette for Q1 Pie Chart, ordered from darkest to lightest.
-                // This array dictates the color applied based on the sorted rank of data values.
-                q1PieColors: [
-                    '#2E7D4F', // Darkest, for highest data value (50%)
-                    '#4BA76E', // Next darkest (27.8%)
-                    '#6EC27E', // Middle (11.1%)
-                    '#A3D977', // Next lightest (5.6%)
-                    '#D4ED91'  // Lightest, for lowest data value (5.6%)
-                ],
-
-                // Gradient for bar charts (Q2, Q3), ordered from darkest to lightest.
-                // This array will be applied directly to `backgroundColor` for "bottom darkest, top lightest" effect.
-                barChartGradient: [
-                    '#7A8E6F', // Darkest (for bottom bar, if data order is bottom to top)
-                    '#819A91',
-                    '#A7C1A8',
-                    '#D1D8BE',
-                    '#EEEFE0'  // Lightest (for top bar)
-                ],
-
-                darkText: '#263238', // Dark text as requested
-                lightBackground: '#F4F7F9', // Main background as requested
-                cardBackground: '#FFFFFF' // Card background as requested
-            };
-
-            // Chart 1: AI 도움 정도 (Pie Chart) - Fix to preserve original slice order while applying ranked colors
-            const q1Ctx = document.getElementById('surveyChart1')?.getContext('2d');
-            if (q1Ctx) {
-                const q1LabelsOriginal = [
-                    "중간중간 힌트를 받는 정도로 사용하는 것이 적절하다",
-                    "기본 개념만 익힐 때 참고용으로 사용하는 것이 좋다", 
-                    "최소한으로만, 꼭 필요할 때만 사용해야 한다.",
-                    "대부분 AI 도움을 받아 빠르게 해결하는 게 효율적이다", 
-                    "가능한 모든 문제에 AI를 적극적으로 활용하는 게 좋다"
-                ];
-                // Data from user's provided snippet (n=18 for Q1)
-                const q1DataValuesOriginal = [50, 27.8, 11.1, 5.6, 5.6]; 
-
-                // Create a mapping of original index to data value for sorting purposes
-                const indexedData = q1DataValuesOriginal.map((value, index) => ({
-                    value: value,
-                    originalIndex: index
-                }));
-
-                // Sort the indexed data by value in descending order
-                indexedData.sort((a, b) => b.value - a.value);
-
-                // Create a new array for background colors, initialized with empty values
-                const backgroundColors = new Array(q1LabelsOriginal.length);
-
-                // Assign colors from the `q1PieColors` palette based on the sorted order,
-                // but store them back in the `backgroundColors` array at their original index.
-                indexedData.forEach((item, sortedRank) => {
-                    backgroundColors[item.originalIndex] = chartColors.q1PieColors[sortedRank];
-                });
-
-                const q1Data = {
-                    labels: q1LabelsOriginal.map(label => wrapLabel(label, 16)), // Use original labels to preserve order
-                    datasets: [{
-                        data: q1DataValuesOriginal, // Use original data values
-                        backgroundColor: backgroundColors, // Apply colors based on original index and sorted value rank
-                        hoverOffset: 8,
-                        borderColor: chartColors.cardBackground,
-                        borderWidth: 2
-                    }]
-                };
-                const q1Options = {
-                    responsive: true,
-                    maintainAspectRatio: false, // Ensure this is false for responsiveness based on container size
-                    plugins: {
-                        legend: {
-                            position: 'bottom',
-                            labels: {
-                                font: { size: 12 },
-                                boxWidth: 15,
-                                boxHeight: 15,
-                                padding: 15,
-                                generateLabels: function(chart) {
-                                    const data = chart.data;
-                                    if (data.labels.length && data.datasets.length) {
-                                        return data.labels.map((labelArray, i) => {
-                                            const meta = chart.getDatasetMeta(0);
-                                            const style = meta.controller.getStyle(i); // Use 'i' directly as data is already sorted
-                                            const dataValue = data.datasets[0].data[i];
-                                            return {
-                                                text: `${labelArray.join(' ')} (${dataValue.toFixed(1)}%)`, // Use already wrapped label
-                                                fillStyle: style.backgroundColor,
-                                                strokeStyle: style.borderColor,
-                                                lineWidth: style.borderWidth,
-                                                hidden: isNaN(dataValue) || meta.data[i].hidden,
-                                                index: i
-                                            };
-                                        });
-                                    }
-                                    return [];
-                                }
+                },
+                tooltip: {
+                    position: 'customOffset', // 커스텀 포지셔너 적용
+                    callbacks: {
+                        label: function(context) {
+                            let displayLabel = context.label;
+                            if (Array.isArray(displayLabel)) {
+                                displayLabel = displayLabel.join(' ');
                             }
+                            const percentage = context.parsed.toFixed(1);
+                            const count = Math.round((parseFloat(percentage) / 100) * totalRespondents);
+                            return `${displayLabel}: ${percentage}% (${count}명)`;
                         },
-                        tooltip: {
-                            callbacks: {
-                                label: function(context) {
-                                    let displayLabel = context.label;
-                                    if (Array.isArray(displayLabel)) {
-                                        displayLabel = displayLabel.join(' ');
-                                    }
-                                    const percentage = context.parsed.toFixed(1);
-                                    const count = Math.round((parseFloat(percentage) / 100) * totalRespondents);
-                                    return `${displayLabel}: ${percentage}% (${count}명)`;
-                                },
-                                title: function(tooltipItems) {
-                                    if (tooltipItems.length > 0) {
-                                        // Use the original label from the original list for tooltip title
-                                        return q1LabelsOriginal[tooltipItems[0].dataIndex];
-                                    }
-                                    return '';
-                                }
+                        title: function(tooltipItems) {
+                            if (tooltipItems.length > 0) {
+                                return q1LabelsOriginal[tooltipItems[0].dataIndex];
                             }
+                            return '';
                         }
-                    },
-                    layout: {
-                        padding: 10 // Add some padding around the chart
                     }
-                };
-                createChart(q1Ctx, 'pie', q1Data, q1Options);
+                }
+            },
+            layout: {
+                padding: 10
             }
+        };
+        surveyChart1Instance = new Chart(q1Ctx, { type: 'pie', data: q1Data, options: q1Options });
+    }
 
-            // Chart 2: AI 답변 이해도 (Bar Chart) - Apply barChartGradient directly
-            const q2Ctx = document.getElementById('surveyChart2')?.getContext('2d');
-            if (q2Ctx) {
-                // New labels as requested
-                const q2Labels = ["전혀 그렇지 않다", "그렇지 않다", "보통이다", "그렇다", "매우 그렇다"];
-                // New data values for 18 respondents from user's snippet
-                const q2DataValues = [0, 0, 5.6, 66.7, 27.8]; 
-                
-                const q2Data = {
-                    labels: q2Labels.map(label => wrapLabel(label, 12)), // Still wrap labels for axis ticks
-                    datasets: [{
-                        label: '응답 비율 (%)',
-                        data: q2DataValues,
-                        // Apply barChartGradient directly for "bottom darkest, top lightest"
-                        // Since `indexAxis: 'y'`, Chart.js draws bars from the bottom (index 0) to top.
-                        // So to make "아래부터 진한색이고 위쪽으로갈수록 연해지도록", we need `barChartGradient` to be ordered darkest to lightest.
-                        // And the data order needs to be from the lowest bar (darkest) to the highest bar (lightest).
-                        // If the data is ordered from "전혀 그렇지 않다" to "매우 그렇다" (lowest bar to highest bar),
-                        // then we need to reverse the gradient so `barChartGradient[0]` is the darkest.
-                        backgroundColor: [...chartColors.barChartGradient].reverse(), /* Reversed to achieve bottom darkest, top lightest */
-                        borderColor: chartColors.primaryGreenishGrey, // Match primary color for border
-                        borderWidth: 1,
-                        borderRadius: 5, // Add rounded corners to bars
-                    }]
-                };
-                const q2Options = {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    indexAxis: 'y', // Make it a horizontal bar chart
-                    scales: {
-                        x: {
-                            beginAtZero: true,
-                            max: 100, // Max percentage to allow for full scale
-                            title: {
-                                display: true,
-                                text: '비율 (%)',
-                                font: { size: 12, weight: '500' } // UPDATED font size
-                            },
-                            ticks: { callback: (value) => value + "%", font: { size: 11 } } // UPDATED font size
-                        },
-                        y: {
-                            ticks: {
-                                font: {
-                                    size: 11 // UPDATED font size
-                                }
-                            }
-                        }
+    // Chart 2: AI 답변 이해도 (Bar Chart)
+    const q2Ctx = document.getElementById('surveyChart2')?.getContext('2d');
+    if (q2Ctx) {
+        const q2Labels = ["전혀 그렇지 않다", "그렇지 않다", "보통이다", "그렇다", "매우 그렇다"];
+        const q2DataValues = [0, 0, 5.6, 66.7, 27.8]; 
+        
+        const q2Data = {
+            labels: q2Labels.map(label => wrapLabel(label, 12)),
+            datasets: [{
+                label: '응답 비율 (%)',
+                data: q2DataValues,
+                backgroundColor: [...chartColors.barChartGradient].reverse(),
+                borderColor: chartColors.primaryGreenishGrey,
+                borderWidth: 1,
+                borderRadius: 5,
+            }]
+        };
+        const q2Options = {
+            responsive: true,
+            maintainAspectRatio: false,
+            indexAxis: 'y',
+            animation: {
+                x: {
+                    from: 0,
+                    duration: 1000
+                },
+                y: {
+                    from: 0,
+                    duration: 1000
+                }
+            },
+            scales: {
+                x: {
+                    beginAtZero: true,
+                    max: 100,
+                    title: {
+                        display: true,
+                        text: '비율 (%)',
+                        font: { size: 12, weight: '500' }
                     },
-                    plugins: {
-                        legend: {
-                            display: false // No legend needed for single dataset bar chart
-                        },
-                        tooltip: {
-                            callbacks: {
-                                label: function(context) {
-                                    let displayLabel = context.label;
-                                    if (Array.isArray(displayLabel)) { // context.label for bar charts usually a string, but safe check
-                                        displayLabel = displayLabel.join(' '); 
-                                    }
-                                    const percentage = context.parsed.x.toFixed(1);
-                                    const count = Math.round((parseFloat(percentage) / 100) * totalRespondents);
-                                    return `${displayLabel}: ${percentage}% (${count}명)`;
-                                },
-                                title: function(tooltipItems) {
-                                    return q2Labels[tooltipItems[0].dataIndex]; // Use original label for title
-                                }
-                            }
+                    ticks: { callback: (value) => value + "%", font: { size: 11 } }
+                },
+                y: {
+                    ticks: {
+                        font: {
+                            size: 11
                         }
-                    },
-                    layout: { padding: { top: 5, bottom: 5, left: 5, right: 10 } }
-                };
-                createChart(q2Ctx, 'bar', q2Data, q2Options);
-            }
+                    }
+                }
+            },
+            plugins: {
+                legend: {
+                    display: false
+                },
+                tooltip: {
+                    position: 'customOffset', // 커스텀 포지셔너 적용
+                    callbacks: {
+                        label: function(context) {
+                            let displayLabel = context.label;
+                            if (Array.isArray(displayLabel)) {
+                                displayLabel = displayLabel.join(' '); 
+                            }
+                            const percentage = context.parsed.x.toFixed(1);
+                            const count = Math.round((parseFloat(percentage) / 100) * totalRespondents);
+                            return `${displayLabel}: ${percentage}% (${count}명)`;
+                        },
+                        title: function(tooltipItems) {
+                            return q2Labels[tooltipItems[0].dataIndex];
+                        }
+                    }
+                }
+            },
+            layout: { padding: { top: 5, bottom: 5, left: 5, right: 10 } }
+        };
+        surveyChart2Instance = new Chart(q2Ctx, { type: 'bar', data: q2Data, options: q2Options });
+    }
 
-            // Chart 3: AI 사용, 사고력에 방해될까? (Horizontal Bar Chart) - Apply barChartGradient directly
-            const q3Ctx = document.getElementById('surveyChart3')?.getContext('2d');
-            if (q3Ctx) {
-                const q3Labels = [
-                    "전혀 그렇지 않다","그렇지 않다", "보통이다", "그렇다", "매우 그렇다"
-                ];
-                // New data values for 18 respondents from user's snippet
-                const q3DataValues = [5.3, 26.3, 31.6, 26.3, 10.5]; 
-                
-                const q3Data = {
-                    labels: q3Labels.map(label => wrapLabel(label, 12)), // Still wrap labels for axis ticks
-                    datasets: [{
-                        label: '응답 비율 (%)',
-                        data: q3DataValues,
-                        backgroundColor: [...chartColors.barChartGradient], /* Reversed to achieve bottom darkest, top lightest */
-                        borderColor: chartColors.primaryGreenishGrey, // Match primary color for border
-                        borderWidth: 1,
-                        borderRadius: 5, // Add rounded corners to bars
-                    }]
-                };
-                const q3Options = {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    indexAxis: 'y', // Make it a horizontal bar chart
-                    scales: {
-                        x: {
-                            beginAtZero: true,
-                            max: 35, // Max percentage based on the data
-                            title: {
-                                display: true,
-                                text: '비율 (%)',
-                                font: { size: 12, weight: '500' } // UPDATED font size
-                            },
-                            ticks: { callback: (value) => value + "%", font: { size: 11 } } // UPDATED font size
-                        },
-                        y: {
-                            ticks: {
-                                font: {
-                                    size: 11
-                                }
-                            }
-                        }
+    // Chart 3: AI 사용, 사고력에 방해될까? (Horizontal Bar Chart)
+    const q3Ctx = document.getElementById('surveyChart3')?.getContext('2d');
+    if (q3Ctx) {
+        const q3Labels = [
+            "전혀 그렇지 않다", "그렇지 않다", "보통이다", "그렇다", "매우 그렇다"
+        ];
+        const q3DataValues = [5.3, 26.3, 31.6, 26.3, 10.5]; 
+        
+        const q3Data = {
+            labels: q3Labels.map(label => wrapLabel(label, 12)),
+            datasets: [{
+                label: '응답 비율 (%)',
+                data: q3DataValues,
+                backgroundColor: [...chartColors.barChartGradient],
+                borderColor: chartColors.primaryGreenishGrey,
+                borderWidth: 1,
+                borderRadius: 5,
+            }]
+        };
+        const q3Options = {
+            responsive: true,
+            maintainAspectRatio: false,
+            indexAxis: 'y',
+            animation: {
+                x: {
+                    from: 0,
+                    duration: 1000
+                },
+                y: {
+                    from: 0,
+                    duration: 1000
+                }
+            },
+            scales: {
+                x: {
+                    beginAtZero: true,
+                    max: 35,
+                    title: {
+                        display: true,
+                        text: '비율 (%)',
+                        font: { size: 12, weight: '500' }
                     },
-                    plugins: {
-                        legend: {
-                            display: false
-                        },
-                        tooltip: {
-                            callbacks: {
-                                label: function(context) {
-                                    let displayLabel = context.label;
-                                    if (Array.isArray(displayLabel)) { // context.label for bar charts usually a string, but safe check
-                                        displayLabel = displayLabel.join(' '); 
-                                    }
-                                    const percentage = context.parsed.x.toFixed(1);
-                                    const count = Math.round((parseFloat(percentage) / 100) * totalRespondents);
-                                    return `${displayLabel}: ${percentage}% (${count}명)`;
-                                },
-                                title: function(tooltipItems) {
-                                    return q3Labels[tooltipItems[0].dataIndex]; // Use original label for title
-                                }
-                            }
+                    ticks: { callback: (value) => value + "%", font: { size: 11 } }
+                },
+                y: {
+                    ticks: {
+                        font: {
+                            size: 11
                         }
-                    },
-                    layout: { padding: { top: 5, bottom: 5, left: 5, right: 10 } }
-                };
-                createChart(q3Ctx, 'bar', q3Data, q3Options);
+                    }
+                }
+            },
+            plugins: {
+                legend: {
+                    display: false
+                },
+                tooltip: {
+                    position: 'customOffset', // 커스텀 포지셔너 적용
+                    callbacks: {
+                        label: function(context) {
+                            let displayLabel = context.label;
+                            if (Array.isArray(displayLabel)) {
+                                displayLabel = displayLabel.join(' '); 
+                            }
+                            const percentage = context.parsed.x.toFixed(1);
+                            const count = Math.round((parseFloat(percentage) / 100) * totalRespondents);
+                            return `${displayLabel}: ${percentage}% (${count}명)`;
+                        },
+                        title: function(tooltipItems) {
+                            return q3Labels[tooltipItems[0].dataIndex];
+                        }
+                    }
+                }
+            },
+            layout: { padding: { top: 5, bottom: 5, left: 5, right: 10 } }
+        };
+        surveyChart3Instance = new Chart(q3Ctx, { type: 'bar', data: q3Data, options: q3Options });
+    }
+    chartsInitialized = true; // Set flag after initialization
+};
+
+document.addEventListener('DOMContentLoaded', () => {
+    const splashScreen = document.getElementById('splashScreen');
+    const scrollArrowsSplash = document.getElementById('scrollArrowsSplash');
+    const mainHeaderContent = document.getElementById('mainHeaderContent');
+    const fullContentWrapper = document.getElementById('fullContentWrapper');
+
+    document.querySelectorAll('img').forEach(img => {
+        if (!img.src.startsWith('http')) {
+            img.setAttribute('onerror', `this.onerror=null;this.src='https://placehold.co/600x400/CCCCCC/333333?text=${encodeURIComponent(img.alt || '이미지 없음')}';`);
+        }
+    });
+
+    scrollArrowsSplash.addEventListener('click', () => {
+        splashScreen.classList.add('fade-out');
+        mainHeaderContent.classList.add('show-header');
+        fullContentWrapper.classList.add('is-visible');
+        setTimeout(() => {
+            window.scrollTo({
+                top: 0,
+                behavior: "smooth"
+            });
+        }, 1000);
+    });
+
+    const animatedElements = document.querySelectorAll('.scroll-animate');
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('is-visible');
             }
         });
+    }, {
+        threshold: 0.1
+    });
+
+    fullContentWrapper.addEventListener('transitionend', function handler(event) {
+        if (event.propertyName === 'transform' && fullContentWrapper.classList.contains('is-visible')) {
+            animatedElements.forEach(el => {
+                observer.observe(el);
+            });
+            this.removeEventListener('transitionend', handler);
+        }
+    });
+
+    // Set up Intersection Observer for the charts section to trigger animation
+    const chartSection = document.getElementById('research-results');
+    if (chartSection) {
+        const chartObserver = new IntersectionObserver((entries, observer) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting && !chartsInitialized) { // Check chartsInitialized flag
+                    initializeAllCharts(); // Call the function to create charts with animation
+                    observer.unobserve(entry.target); // Stop observing once charts are initialized
+                }
+            });
+        }, {
+            threshold: 0.2 // Trigger when 20% of the section is visible
+        });
+        chartObserver.observe(chartSection);
+    }
+});
+
     </script>
 </body>
 </html>
