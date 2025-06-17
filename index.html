@@ -21,223 +21,189 @@ Constraints: Single HTML file, no external JS/CSS (except CDNs), no SVG/Mermaid.
             color: #263238; /* Dark Text */
             margin: 0;
             overflow-x: hidden; /* Prevent horizontal scroll */
-            
-            /* Initial Full screen gradient background for the entire page - Adjusted to new palette */
-            background: linear-gradient(to bottom, #819A91, #A7C1A870, transparent);
-            background-repeat: no-repeat;
-            background-attachment: fixed; /* Keep gradient fixed while scrolling initially */
+            overflow-y: auto; /* Allow vertical scrolling by default */
+            background: #F4F7F9; /* Default background when content is revealed */
+            background-attachment: scroll; /* Allow background to scroll with content */
             transition: background 0.8s ease-out; /* Smooth transition for background property */
         }
 
-        /* Styles for initial view (only header content and arrows visible and centered) */
-        body.initial-view {
-            display: flex; /* Use flexbox for layout */
-            flex-direction: column; /* Stack items vertically */
-            justify-content: space-between; /* Distribute space between header and arrows */
-            align-items: center; /* Center horizontally */
-            min-height: 100vh;
-            overflow: hidden; /* Prevent scrolling in initial view */
-            padding: 0; /* Remove any default body padding */
+        /* Initial splash screen that covers the entire viewport */
+        #splashScreen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: 1000; /* Ensure it's on top */
+            display: flex;
+            flex-direction: column;
+            justify-content: center; /* Changed to center to group content */
+            align-items: center;
+            background: linear-gradient(to bottom, #577067, #51895370, transparent); /* Your initial gradient */
+            transition: opacity 1s ease-out, transform 1s ease-out; /* Smooth fade and slide out */
+            padding: 0;
             box-sizing: border-box;
         }
-        /* Styles for body after initial view is removed (content is revealed) - Adjusted to new palette */
-        body:not(.initial-view) {
-            display: block; /* Revert to normal block display */
-            min-height: auto; /* Remove min-height */
-            overflow-y: auto; /* Allow scrolling */
-            background: #F4F7F9; /* Lighter grey as requested */
-            background-attachment: scroll; /* Allow background to scroll with content */
-            padding: 0; /* Remove padding when content is revealed */
-        }
-        
-        .chart-container {
-            position: relative; /* Chart.js 반응형에 필요 */
-        }
-        .report-title-main { color: #FFFFFF; } /* Header text is white */
-        /* Section title custom styles - Adjusted to new palette */
-        .section-title-custom { color: #819A91; 
-            border-bottom: 3px solid #A7C1A8; 
-            padding-bottom: 0.75rem; 
-            margin-bottom: 2rem; 
-            font-weight: 700; 
-        }
-        .card-custom { 
-            background-color: #FFFFFF; 
-            border-radius: 0.75rem; 
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06); 
-        }
-        /* Keyword tag styles - Adjusted to new palette */
-        .keyword-tag { 
-            background-color: #EEEFE0; 
-            color: #819A91; 
-            padding: 0.5rem 1rem; 
-            border-radius: 9999px; 
-            font-size: 1rem; 
-            margin-right: 0.5rem; 
-            margin-bottom: 0.5rem; 
-            display: inline-block; 
-            font-weight: 500; 
-        }
-        /* Recommendation item border - Adjusted to new palette */
-        .recommendation-item { border-left: 4px solid #A7C1A8; 
-            padding-left: 1.25rem; 
-            margin-bottom: 1rem; 
-        }
-        .interview-summary-item { margin-bottom: 0.75rem; }
 
-        /* Interview summary strong text - Adjusted to new palette */
-        .interview-summary-item strong { color: #819A91; } /* Primary Greenish Grey for keywords in interview */
-        /* Pledge card styles - Adjusted to new palette */
-        .pledge-card {
-            background-color: #EEEFE0;
-            border: 2px solid #819A91;
-            box-shadow: 0 10px 15px -3px rgba(129, 154, 145, 0.2), 0 4px 6px -2px rgba(129, 154, 145, 0.1); /* Adjusted shadow to match new primary color */
-        }
-
-        /* Tailwind custom color aliases - Adjusted to new palette */
-        .bg-primary-blue { background-color: #819A91; }
-        .text-secondary-teal { color: #A7C1A8; }
-        .bg-supporting-light-blue { background-color: #D1D8BE; }
-        
-        .chartjs-legend-item-text {
-            font-size: 12px !important; /* Smaller size for legend text as requested - UPDATED */
-        }
-        canvas {
-            image-rendering: -moz-crisp-edges;
-            image-rendering: -webkit-crisp-edges;
-            image-rendering: pixelated;
-            image-rendering: crisp-edges;
-        }
-
-        /* Scroll Animation for individual sections */
-        .scroll-animate {
+        #splashScreen.fade-out {
             opacity: 0;
-            transform: translateY(30px);
-            transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+            transform: translateY(-100vh); /* Slide up and out */
+            pointer-events: none; /* Make it unclickable after fade */
         }
-        .scroll-animate.is-visible {
+
+        /* Header content within the splash screen */
+        #mainHeaderSplash {
+            padding: 3rem 1rem;
+            width: 100%;
+            max-width: 4xl;
+            box-sizing: border-box;
+            color: #FFFFFF;
+        }
+        #mainHeaderSplash h1 { font-size: 3.5rem; } /* Adjusted for splash screen */
+        /* Updated color for subtitle to match scroll arrow color */
+        #mainHeaderSplash p:nth-of-type(1) { font-size: 1.7rem; color: rgb(208, 226, 216); } 
+        #mainHeaderSplash p:nth-of-type(2) { font-size: 1.25rem; } /* Adjusted for splash screen */
+
+
+        /* Scroll arrows within the splash screen */
+        #scrollArrowsSplash {
+            margin-top: 2rem; /* Added margin to space it from the header text */
+            padding-bottom: 3rem; /* Keep some padding from bottom of viewport */
+            color: rgb(0, 127, 57);
+            text-align: center;
+        }
+        .scroll-arrow {
+            animation: bounce 1.5s infinite;
+            cursor: pointer;
+            display: inline-block;
+            margin: 0 0.5rem;
+            color: rgb(171, 182, 176);
+        }
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+            40% { transform: translateY(-3px); }
+            60% { transform: translateY(-1px); }
+        }
+
+        /* Main Header for the content area (no longer sticky) */
+        #mainHeaderContent {
+            background-color: #819A91; /* Solid background - Already matches the gradient start color */
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            transition: all 0.5s ease-in-out;
+            text-align: center;
+            color: white;
+            padding: 1rem 0;
+            opacity: 0;
+            transform: translateY(-100%); /* Start above */
+            width: 100%; /* Ensure it spans full width */
+        }
+        #mainHeaderContent.show-header {
             opacity: 1;
             transform: translateY(0);
         }
+        #mainHeaderContent h1 {
+            font-size: 2.75rem; /* Smaller font for main title */
+            margin-bottom: 0.25rem;
+        }
+        #mainHeaderContent p {
+            font-size: 1.125rem; /* Smaller font for subtitle */
+        }
 
-        /* Wrapper for main content and footer, initially hidden and slides up */
+        /* Main content wrapper - starts hidden above */
         #fullContentWrapper {
             opacity: 0;
             visibility: hidden;
-            transform: translateY(100vh); /* Start completely off-screen below */
-            transition: opacity 1.2s ease-out, transform 1.2s ease-out, visibility 1.2s ease-out; /* Slower animation */
+            transform: translateY(-100vh); /* Start above the viewport */
+            transition: transform 1.2s ease-out, opacity 1.2s ease-out, visibility 1.2s ease-out; /* Slower animation */
             pointer-events: none;
             width: 100%;
         }
         #fullContentWrapper.is-visible {
             opacity: 1;
             visibility: visible;
-            transform: translateY(0); /* Slide into view */
+            transform: translateY(0); /* Swoosh down into view */
             pointer-events: auto;
         }
-
-        /* Scroll arrow animation */
-        .scroll-arrow {
-            animation: bounce 1.5s infinite;
-            cursor: pointer;
-            display: inline-block;
-            margin: 0 0.5rem;
-            color: white; /* Ensure arrows are white */
+        
+        .chart-container { 
+            position: relative; 
+            width: 100%; /* Ensure it takes full width of parent */
+            height: 100%; /* Ensure it takes full height of parent */
         }
-
-        @keyframes bounce {
-            0%, 20%, 50%, 80%, 100% {
-                transform: translateY(0);
-            }
-            40% {
-                transform: translateY(-3px); /* Less movement */
-            }
-            60% {
-                transform: translateY(-1px); /* Less movement */
-            }
-        }
-
-        /* Styles for header in initial view */
-        body.initial-view #mainHeader {
-            padding: 3rem 1rem; /* Add some vertical padding for visual spacing */
-            margin-bottom: auto; /* Pushes it up, balancing with arrows */
-        }
-
-        /* Styles for scroll arrows in initial view */
-        body.initial-view #scrollArrows {
-            margin-top: auto; /* Pushes it to the bottom */
-            padding-bottom: 3rem; /* Add some space from the bottom of the viewport */
-        }
-
-        /* Styles for header after it becomes visible (no longer sticky) - Adjusted to new palette */
-        #mainHeader.header-revealed {
-            background-color: #819A91; /* Solid background matching new primary blue */
-            width: 100%; /* Ensure it takes full width */
-            max-width: none; /* Override initial max-width */
-            margin: 0; /* Remove auto margins */
-            padding: 1rem 0; /* Smaller padding for compact header */
-            border-radius: 0; /* Remove border-radius */
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-            transition: all 0.5s ease-in-out; /* Smooth transition for properties */
-        }
-        #mainHeader.header-revealed h1 {
-            font-size: 2.75rem; /* Smaller font for main title - UPDATED */
-            margin-bottom: 0.25rem;
-        }
-        #mainHeader.header-revealed p {
-            font-size: 1.125rem; /* Smaller font for subtitle - UPDATED */
-        }
-
-        /* Highlight style for keywords */
-        .highlight-keyword {
-            color: #90b560; /* Primary Greenish Grey for emphasis - UPDATED */
-            font-weight: 600; /* Make it a bit bolder */
-        }
+        .report-title-main { color: #FFFFFF; }
+        .section-title-custom { color: #819A91; border-bottom: 3px solid #A7C1A8; padding-bottom: 0.75rem; margin-bottom: 2rem; font-weight: 700; }
+        .card-custom { background-color: #FFFFFF; border-radius: 0.75rem; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06); }
+        .keyword-tag { background-color: #EEEFE0; color: #819A91; padding: 0.3rem 0.8rem; border-radius: 9999px; font-size: 0.9rem; margin-right: 0.5rem; margin-bottom: 0.5rem; display: inline-block; font-weight: 500; }
+        .recommendation-item { border-left: 4px solid #A7C1A8; padding-left: 1.25rem; margin-bottom: 1rem; }
+        .interview-summary-item { margin-bottom: 0.75rem; }
+        .interview-summary-item strong { color: #819A91; }
+        .pledge-card { background-color: #EEEFE0; border: 2px solid #819A91; box-shadow: 0 10px 15px -3px rgba(129, 154, 145, 0.2), 0 4px 6px -2px rgba(129, 154, 145, 0.1); }
+        .bg-primary-blue { background-color: #819A91; }
+        .text-secondary-teal { color: #A7C1A8; }
+        .bg-supporting-light-blue { background-color: #D1D8BE; }
+        .chartjs-legend-item-text { font-size: 12px !important; }
+        canvas { 
+            image-rendering: pixelated;
+            width: 100% !important; /* Force canvas to take 100% width */
+            height: 100% !important; /* Force canvas to take 100% height */
+        } 
+        .scroll-animate { opacity: 0; transform: translateY(30px); transition: opacity 0.6s ease-out, transform 0.6s ease-out; }
+        .scroll-animate.is-visible { opacity: 1; transform: translateY(0); }
+        .highlight-keyword { color: #387B16; font-weight: 600; }
     </style>
 </head>
-<body class="antialiased text-lg md:text-xl initial-view"> <!-- UPDATED font size -->
-    <!-- Header (only title visible initially, background handled by body gradient) -->
-    <header id="mainHeader" class="text-white px-4 text-center w-full max-w-4xl mx-auto">
-        <h1 class="text-5xl md:text-6xl font-extrabold report-title-main mb-4" style="color : #fcfff6">학습 도우미 AI, 어디까지 써야할까?</h1> <!-- UPDATED font size -->
-        <p class="text-3xl md:text-4xl font-semibold mb-2" style="color: #F1F7EE;">학생들의 생성형 AI 활용 실태와 학습 태도 분석</p> <!-- UPDATED font size and color -->
-        <p class="text-lg md:text-xl font-medium">4조 : 1405김동현, 1407김진수, 1410신수아, 1413이여설, 1415조유진</p> <!-- UPDATED text and font size -->
-    </header>
+<body class="antialiased text-lg md:text-xl">
 
-    <!-- Scroll Down Arrows -->
-    <div id="scrollArrows" class="text-5xl flex justify-center">
-        <!-- V-shaped arrow SVG -->
-        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-12 h-12 scroll-arrow">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
-        </svg>
-        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-12 h-12 scroll-arrow">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
-        </svg>
-        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-12 h-12 scroll-arrow">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
-        </svg>
+    <!-- Initial splash screen covering the whole viewport -->
+    <div id="splashScreen">
+        <header id="mainHeaderSplash" class="text-white px-4 text-center w-full max-w-4xl mx-auto">
+            <h1 class="text-5xl md:text-6xl font-extrabold report-title-main mb-3">학습 도우미 AI, 어디까지 써야할까?</h1>
+            <p class="text-4xl md:text-5xl font-semibold mb-4" style="color: rgb(208, 226, 216);">학생들의 생성형 AI 활용 실태와 학습 태도 분석</p>
+            <br><br>
+            <p class="text-lg md:text-xl font-medium">4조 : 1405김동현, 1407김진수, 1410신수아, 1413이여설, 1415조유진</p>
+        </header>
+
+        <div id="scrollArrowsSplash" class="text-5xl flex justify-center">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-12 h-12 scroll-arrow">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
+            </svg>
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-12 h-12 scroll-arrow">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
+            </svg>
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-12 h-12 scroll-arrow">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
+            </svg>
+        </div>
     </div>
 
-    <!-- Wrapper for main content and footer, initially hidden and slides up -->
+    <!-- Main Header for content (this one becomes sticky) -->
+    <header id="mainHeaderContent" class="text-white px-4 text-center w-full">
+        <h1 class="text-5xl md:text-6xl font-extrabold report-title-main mb-3">학습 도우미 AI, 어디까지 써야할까?</h1>
+        <p class="text-4xl md:text-5xl font-semibold mb-4" style="color: rgb(208, 226, 216);">학생들의 생성형 AI 활용 실태와 학습 태도 분석</p>
+        <p class="text-lg md:text-xl font-medium">4조 : 1405김동현, 1407김진수, 1410신수아, 1413이여설, 1415조유진</p>
+    </header>
+
+    <!-- Wrapper for main content and footer -->
     <div id="fullContentWrapper">
         <main class="container mx-auto p-4 md:p-8">
             <!-- Section 1: 조사 동기와 목적 -->
             <section id="motivation-purpose" class="mb-28 scroll-animate">
-                <h2 class="text-4xl md:text-5xl section-title-custom mt-8">1. 조사 동기와 목적</h2> <!-- UPDATED font size -->
+                <h2 class="text-4xl md:text-5xl section-title-custom mt-8">1. 조사 동기와 목적</h2>
                 <div class="grid md:grid-cols-2 gap-8">
                     <div class="card-custom p-7">
-                        <h3 class="text-3xl md:text-4xl font-semibold text-primary-blue mb-4">가. 조사 동기</h3> <!-- UPDATED font size -->
-                        <p class="text-gray-800 leading-relaxed">최근AI 기술의 일상적 적용이 확대되면서, 학생들의 학습 및 과제 수행 시 AI 활용이 증가했다. 그러나 <span class="highlight-keyword">AI 의존도 증가</span>에 따른 <span class="highlight-keyword">자기 주도 학습 능력 저하 우려</span>가 제기되었다. 이에 본 조사는 <span class="highlight-keyword">AI 도움의 적정선</span>과 <span class="highlight-keyword">스스로 학습해야 할 범위</span>를 탐색하고자 시작되었다.</p>
+                        <h3 class="text-2xl md:text-3xl font-semibold text-primary-blue mb-4">가. 조사 동기</h3>
+                        <p class="text-gray-800 leading-relaxed">최근 AI 기술의 일상적 적용이 확대되면서, 학생들의 학습 및 과제 수행 시 <span class="highlight-keyword">AI 활용이 증가</span>했다. 그러나 <span class="highlight-keyword">AI 의존도 증가</span>에 따른 <span class="highlight-keyword">자기 주도 학습 능력 저하 우려</span>가 제기되었다. 이에 본 조사는 <span class="highlight-keyword">AI 도움의 적정선</span>과 <span class="highlight-keyword">스스로 학습해야 할 범위</span>를 탐색하고자 시작되었다.</p>
                     </div>
                     <div class="card-custom p-7">
-                        <h3 class="text-2xl md:text-3xl font-semibold text-primary-blue mb-4">나. 조사 목적</h3> <!-- UPDATED font size -->
-                        <p class="text-gray-800 leading-relaxed">본 조사의 목적은 인공지능(AI)을 적절히 활용하면서도 개인의 지식과 사고력을 함께 키울 수 있는 기준을 찾는 데 있다. <span class="highlight-keyword">AI에 과도하게 의존하지 않으면서 학습 능력을 높이는 방법</span>과 <span class="highlight-keyword">AI를 효과적으로 활용하는 방법</span>을 균형 있게 살펴보고, AI와 조화롭게 공존할 수 있는 방향을 제시하고자 한다.</p>
+                        <h3 class="text-2xl md:text-3xl font-semibold text-primary-blue mb-4">나. 조사 목적</h3>
+                        <p class="text-gray-800 leading-relaxed">본 조사는 <span class="highlight-keyword">AI를 적절히 활용</span>하며 개인의 지식 함양과 사고력 증진 기준점을 모색하는 것을 목표로 한다. <span class="highlight-keyword">AI 의존 지양</span> 및 <span class="highlight-keyword">학습 능력 신장 방법</span>과 <span class="highlight-keyword">효과적인 AI 활용법</span>을 균형 있게 파악하여, <span class="highlight-keyword">AI와 현명하게 공존하는 방향</span>을 제안하고자 한다.</p>
                     </div>
                 </div>
             </section>
 
             <!-- Section 2: 조사 계획 -->
             <section id="research-plan" class="mb-28 scroll-animate">
-                <h2 class="text-4xl md:text-5xl section-title-custom">2. 조사 계획</h2> <!-- UPDATED font size -->
+                <h2 class="text-4xl md:text-5xl section-title-custom">2. 조사 계획</h2>
                 <div class="card-custom p-7">
                     <div class="grid md:grid-cols-3 gap-6 text-center">
                         <div>
@@ -246,18 +212,16 @@ Constraints: Single HTML file, no external JS/CSS (except CDNs), no SVG/Mermaid.
                                     <path stroke-linecap="round" stroke-linejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 0 1 2.25-2.25h13.5A2.25 2.25 0 0 1 21 7.5v11.25m-18 0A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75m-18 0v-7.5A2.25 2.25 0 0 1 5.25 9h13.5A2.25 2.25 0 0 1 21 11.25v7.5" />
                                 </svg>
                             </div>
-                            <h3 class="text-2xl font-semibold text-primary-blue mb-2">가. 조사 기간</h3> <!-- UPDATED font size -->
+                            <h3 class="text-2xl font-semibold text-primary-blue mb-2">가. 조사 기간</h3>
                             <p class="text-gray-700">2025년 5월 12일 ~ 5월 23일</p>
                         </div>
                         <div>
                             <div class="bg-supporting-light-blue p-4 rounded-lg mb-3 inline-block">
-                                <!-- Changed person icon for "조사 대상" (Research Subjects) -->
                                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="#819A91" class="w-12 h-12 mx-auto">
                                     <path stroke-linecap="round" stroke-linejoin="round" d="M17.982 18.725A7.488 7.488 0 0012 15.75a7.488 7.488 0 00-5.982 2.975m11.963 0a9 9 0 10-11.963 0m11.963 0A8.966 8.966 0 0112 21a8.966 9.0 0 01-5.982-2.275M15 9.75a3 3 0 11-6 0 3 3 0 016 0z" />
                                 </svg>
-
                             </div>
-                            <h3 class="text-2xl font-semibold text-primary-blue mb-2">나. 조사 대상</h3> <!-- UPDATED font size -->
+                            <h3 class="text-2xl font-semibold text-primary-blue mb-2">나. 조사 대상</h3>
                             <p class="text-gray-700">미림마이스터고 뉴미디어 소프트웨어과 1학년 4반 18명</p>
                         </div>
                         <div>
@@ -266,7 +230,7 @@ Constraints: Single HTML file, no external JS/CSS (except CDNs), no SVG/Mermaid.
                                        <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 6h9.75M10.5 6a1.5 1.5 0 1 1-3 0m3 0a1.5 1.5 0 1 0-3 0M3.75 6H7.5m3 12h9.75m-9.75 0a1.5 1.5 0 0 1-3 0m3 0a1.5 1.5 0 0 0-3 0m-3.75 0H7.5m9-6h3.75m-3.75 0a1.5 1.5 0 0 1-3 0m3 0a1.5 1.5 0 0 0-3 0m-9.75 0h9.75" />
                                 </svg>
                             </div>
-                            <h3 class="text-2xl font-semibold text-primary-blue mb-2">다. 조사 방법</h3> <!-- UPDATED font size -->
+                            <h3 class="text-2xl font-semibold text-primary-blue mb-2">다. 조사 방법</h3>
                             <p class="text-gray-700">설문조사, 인터뷰</p>
                         </div>
                     </div>
@@ -275,15 +239,14 @@ Constraints: Single HTML file, no external JS/CSS (except CDNs), no SVG/Mermaid.
 
             <!-- Section 3: 조사 결과 -->
             <section id="research-results" class="mb-28 scroll-animate">
-                <h2 class="text-4xl md:text-5xl section-title-custom">3. 조사 결과</h2> <!-- UPDATED font size -->
+                <h2 class="text-4xl md:text-5xl section-title-custom">3. 조사 결과</h2>
                 
                 <div class="mb-16">
-                    <h3 class="text-3xl md:text-4xl font-semibold text-primary-blue mb-8 text-center">가. 설문조사 분석 결과</h3> <!-- UPDATED font size -->
+                    <h3 class="text-3xl md:text-4xl font-semibold text-primary-blue mb-8 text-center">가. 설문조사 분석 결과</h3>
                     <div class="grid md:grid-cols-1 lg:grid-cols-3 gap-8">
                         <!-- CHARTJS_Q1_SURVEY_EFFECTIVENESS -->
                         <div class="card-custom p-6 flex flex-col items-center">
-                            <h4 class="text-2xl font-semibold mb-2 text-center">Q1. AI 도움, 어느 정도가 효과적일까?</h4> <!-- UPDATED font size -->
-                            <!-- Modified text under Q1 for better readability -->
+                            <h4 class="text-2xl font-semibold mb-2 text-center">Q1. AI 도움, 어느 정도가 효과적일까?</h4>
                             <p class="text-base text-gray-700 mb-4 text-center">AI의 도움을 어느 정도까지 받는 것이 학습에 가장 효과적이라고 생각하나요?</p>
                             <div class="chart-container w-full h-72 md:h-80 lg:h-[350px]">
                                 <canvas id="surveyChart1"></canvas>
@@ -292,8 +255,8 @@ Constraints: Single HTML file, no external JS/CSS (except CDNs), no SVG/Mermaid.
 
                         <!-- CHARTJS_Q2_SURVEY_UNDERSTANDING -->
                         <div class="card-custom p-6 flex flex-col items-center">
-                            <h4 class="text-2xl font-semibold mb-2 text-center">Q2. AI 답변, 얼마나 이해할까?</h4> <!-- UPDATED font size -->
-                            <p class="text-base text-gray-500 mb-4 text-center">AI가 답을 알려줄 때, 그 내용을 완전히 이해하고 넘어가는 편인가요?</p> <!-- UPDATED font size -->
+                            <h4 class="text-2xl font-semibold mb-2 text-center">Q2. AI 답변, 얼마나 이해할까?</h4>
+                            <p class="text-base text-gray-500 mb-4 text-center">AI가 답을 알려줄 때, 그 내용을 완전히 이해하고 넘어가는 편인가요?</p>
                             <div class="chart-container w-full h-72 md:h-80 lg:h-[350px]">
                                 <canvas id="surveyChart2"></canvas>
                             </div>
@@ -301,64 +264,60 @@ Constraints: Single HTML file, no external JS/CSS (except CDNs), no SVG/Mermaid.
                         
                         <!-- CHARTJS_Q3_SURVEY_HINDRANCE -->
                         <div class="card-custom p-6 flex flex-col items-center">
-                            <h4 class="text-2xl font-semibold mb-2 text-center">Q3. AI 사용, 사고력에 방해될까?</h4> <!-- UPDATED font size -->
-                            <p class="text-base text-gray-500 mb-4 text-center">생성형 AI 사용이 스스로 사고하는 능력이나 지식 쌓기에 방해가 된다고 느끼시나요?</p> <!-- UPDATED font size -->
+                            <h4 class="text-2xl font-semibold mb-2 text-center">Q3. AI 사용, 사고력에 방해될까?</h4>
+                            <p class="text-base text-gray-500 mb-4 text-center">생성형 AI 사용이 스스로 사고하는 능력이나 지식 쌓기에 방해가 된다고 느끼시나요?</p>
                             <div class="chart-container w-full h-72 md:h-80 lg:h-[350px]">
                                 <canvas id="surveyChart3"></canvas>
                             </div>
                         </div>
                     </div>
                     <div class="card-custom p-7 mt-10">
-                        <h4 class="text-2xl font-semibold text-primary-blue mb-4">설문 결과 요약</h4> <!-- UPDATED font size -->
-                        <p class="text-gray-800 leading-relaxed mb-3">학생들은 <span class="highlight-keyword">AI를 유익한 도구로 인식</span>하나, <span class="highlight-keyword">신중하고 자기 주도적 활용</span>을 중시했다. 필요한 순간에 <span class="highlight-keyword">힌트를 얻는 수준(50%)</span>이 가장 적절하다는 의견이 많았고, <span class="highlight-keyword">기본 개념만 익힐 때 참고용(27.8%)</span>으로 사용하는 것이 좋다는 의견도 있었다.</p> <!-- UPDATED text -->
-                        <p class="text-gray-800 leading-relaxed mb-3">대부분 학생(<span class="highlight-keyword">94.5%</span>)은 <span class="highlight-keyword">AI 답변 내용을 이해하고 자기 것으로 만들려는 태도</span>를 보여, AI 활용이 학습 효과에 긍정적일 수 있음을 시사했다.</p> <!-- UPDATED text -->
-                        <p class="text-gray-800 leading-relaxed"><span class="highlight-keyword">AI 사용이 사고력/지식 습득에 방해된다는 인식(36.8%)</span>과 그렇지 않다는 인식(31.6%, 보통 31.6%)이 혼재하여, <span class="highlight-keyword">AI 영향에 대한 학생들의 인식이 다양함</span>을 확인했다.</p>
+                        <h4 class="text-2xl font-semibold text-primary-blue mb-4">설문 결과 요약</h4>
+                        <p class="text-gray-800 leading-relaxed mb-3">학생들은 <span class="highlight-keyword">AI를 유익한 도구로 인식</span>하나, <span class="highlight-keyword">신중하고 자기 주도적 활용</span>을 중시했다. 필요한 순간에 <span class="highlight-keyword">힌트를 얻는 수준(50%)</span>이 가장 적절하다는 의견이 많았고, <span class="highlight-keyword">기본 개념만 익힐 때 참고용(27.8%)</span>으로 사용하는 것이 좋다는 의견도 있었다.</p>
+                        <p class="text-gray-800 leading-relaxed mb-3">대부분 학생(94.5%)은 <span class="highlight-keyword">AI 답변 내용을 이해하고 자기 것으로 만들려는 태도</span>를 보여, AI 활용이 학습 효과에 긍정적일 수 있음을 시사했다.</p>
+                        <p class="text-gray-800 leading-relaxed">AI 사용이 사고력/지식 습득에 방해된다는 인식(36.8%)과 그렇지 않다는 인식(31.6%, 보통 31.6%)이 혼재하여, <span class="highlight-keyword">AI 영향에 대한 학생들의 인식이 다양함</span>을 확인했다.</p>
                     </div>
                 </div>
 
                 <div>
-                    <h3 class="text-3xl md:text-4xl font-semibold text-primary-blue mb-8 text-center">나. 개별 인터뷰 분석 결과</h3> <!-- UPDATED font size -->
+                    <h3 class="text-3xl md:text-4xl font-semibold text-primary-blue mb-8 text-center">나. 개별 인터뷰 분석 결과</h3>
                     <div class="grid md:grid-cols-2 gap-8">
                         <!-- HTML_CSS_DIAGRAM_INTERVIEW_SUMMARY_1 -->
                         <div class="card-custom p-7">
-                            <h4 class="text-2xl font-semibold mb-4 text-center">인터뷰 1: 조정모 학생</h4> <!-- UPDATED font size -->
-                            <!-- Image of Jo Jeong-mo Interview -->
+                            <h4 class="text-2xl font-semibold mb-4 text-center">인터뷰 1: 조정모 학생</h4>
                             <img src="src/조정모 인터뷰_2.jpg" alt="조정모 학생 인터뷰 사진" class="w-full h-auto rounded-lg mb-5 shadow-md" onerror="this.onerror=null;this.src='https://placehold.co/600x400/CCCCCC/333333?text=조정모+인터뷰+이미지';">
                             <div class="space-y-3 text-gray-800 leading-relaxed">
-                                <p class="interview-summary-item"><strong style="color: #1e4c07;">인식:</strong> AI는 다양한 시각과 관점을 제시하는 도구. 자신이 생각 못한 방식 제시.</p>
-                                <p class="interview-summary-item"><strong style="color: #1e4c07;">태도:</strong> AI 의존에 선을 그음. 스스로 해결 노력, AI는 보조 수단.</p>
-                                <p class="interview-summary-item"><strong style="color: #1e4c07;">단점 언급:</strong> 가끔 어색한 표현, 부정확한 정보. 아직 사람만큼 신뢰는 아님.</p>
-                                <p class="interview-summary-item"><strong style="color: #1e4c07;">사용 기준:</strong> 명확한 기준 없음. 상황에 따라 판단. (농담으로 "참참참" 언급)</p>
+                                <p class="interview-summary-item"><strong style="color: #387B16;">인식:</strong> AI는 다양한 시각과 관점을 제시하는 도구. 자신이 생각 못한 방식 제시.</p>
+                                <p class="interview-summary-item"><strong style="color: #387B16;">태도:</strong> AI 의존에 선을 그음. 스스로 해결 노력, AI는 보조 수단.</p>
+                                <p class="interview-summary-item"><strong style="color: #387B16;">단점 언급:</strong> 가끔 어색한 표현, 부정확한 정보. 아직 사람만큼 신뢰는 아님.</p>
+                                <p class="interview-summary-item"><strong style="color: #387B16;">사용 기준:</strong> 명확한 기준 없음. 상황에 따라 판단. (농담으로 "참참참" 언급)</p>
                             </div>
                             <div class="mt-5">
-                                <h5 class="font-semibold mb-3 text-lg">주요 키워드:</h5> <!-- UPDATED font size -->
+                                <h5 class="font-semibold mb-3 text-lg">주요 키워드:</h5>
                                 <div class="flex flex-wrap">
                                     <span class="keyword-tag">다양한 시각</span> <span class="keyword-tag">보조 수단</span> <span class="keyword-tag">자기 주도</span> <span class="keyword-tag">부정확성</span> <span class="keyword-tag">신뢰도 문제</span> <span class="keyword-tag">기준 모호</span>
                                 </div>
                             </div>
-                            <!-- Image of Jo Jeong-mo Word Cloud -->
                             <img src="src/워드클라우드_정모.png" alt="조정모 학생 인터뷰 워드 클라우드" class="w-full h-auto rounded-lg mt-5 shadow-md" onerror="this.onerror=null;this.src='https://placehold.co/600x400/CCCCCC/333333?text=조정모+워드클라우드';">
                         </div>
 
                         <!-- HTML_CSS_DIAGRAM_INTERVIEW_SUMMARY_2 -->
                         <div class="card-custom p-7">
-                            <h4 class="text-2xl font-semibold mb-4 text-center">인터뷰 2: 정재희 학생</h4> <!-- UPDATED font size -->
-                            <!-- Image of Jeong Jae-hee Interview -->
+                            <h4 class="text-2xl font-semibold mb-4 text-center">인터뷰 2: 정재희 학생</h4>
                             <img src="src/정재희 인터뷰_2.jpg" alt="정재희 학생 인터뷰 사진" class="w-full h-auto rounded-lg mb-5 shadow-md" onerror="this.onerror=null;this.src='https://placehold.co/600x400/CCCCCC/333333?text=정재희+인터뷰+이미지';">
                                <div class="space-y-3 text-gray-800 leading-relaxed">
-                                    <p class="interview-summary-item"><strong style="color: #1e4c07;">활용 방식:</strong> 코딩 테스트 준비 시 GPT 코드 단순 복사 아닌, 스스로 해석 및 이해 노력.</p>
-                                    <p class="interview-summary-item"><strong style="color: #1e4c07;">효율성:</strong> 모르는 내용 검색보다 빠르게 정보 획득. 정보 탐색 도구로 활용.</p>
-                                    <p class="interview-summary-item"><strong style="color: #1e4c07;">장단점 인식:</strong> 숙제 해결 도움(장점), 마감 직전 복붙 우려(단점).</p>
-                                    <p class="interview-summary-item"><strong style="color: #1e4c07;">고민:</strong> 수행평가 AI 사용 시 정직하지 않다는 느낌. 도덕적 경계 모호.</p>
-                                    <p class="interview-summary-item"><strong style="color: #1e4c07;">사용 기준:</strong> 별다른 기준 없이, 모르면 바로 GPT 활용.</p>
+                                    <p class="interview-summary-item"><strong style="color: #387B16;">활용 방식:</strong> 코딩 테스트 준비 시 GPT 코드 단순 복사 아닌, 스스로 해석 및 이해 노력.</p>
+                                    <p class="interview-summary-item"><strong style="color: #387B16;">효율성:</strong> 모르는 내용 검색보다 빠르게 정보 획득. 정보 탐색 도구로 활용.</p>
+                                    <p class="interview-summary-item"><strong style="color: #387B16;">장단점 인식:</strong> 숙제 해결 도움(장점), 마감 직전 복붙 우려(단점).</p>
+                                    <p class="interview-summary-item"><strong style="color: #387B16;">고민:</strong> 수행평가 AI 사용 시 정직하지 않다는 느낌. 도덕적 경계 모호.</p>
+                                    <p class="interview-summary-item"><strong style="color: #387B16;">사용 기준:</strong> 별다른 기준 없이, 모르면 바로 GPT 활용.</p>
                                 </div>
                                <div class="mt-5">
-                                    <h5 class="font-semibold mb-3 text-lg">주요 키워드:</h5> <!-- UPDATED font size -->
+                                    <h5 class="font-semibold mb-3 text-lg">주요 키워드:</h5>
                                     <div class="flex flex-wrap">
                                         <span class="keyword-tag">코드 해석</span> <span class="keyword-tag">자기 주도 학습</span> <span class="keyword-tag">빠른 정보 탐색</span> <span class="keyword-tag">효율성</span> <span class="keyword-tag">도덕적 고민</span> <span class="keyword-tag">기준 없음</span>
                                     </div>
                                 </div>
-                            <!-- Image of Jeong Jae-hee Word Cloud -->
                             <img src="src/워드클라우드_재희.png" alt="정재희 학생 인터뷰 워드 클라우드" class="w-full h-auto rounded-lg mt-5 shadow-md" onerror="this.onerror=null;this.src='https://placehold.co/600x400/CCCCCC/333333?text=정재희+워드클라우드';">
                         </div>
                     </div>
@@ -367,25 +326,25 @@ Constraints: Single HTML file, no external JS/CSS (except CDNs), no SVG/Mermaid.
 
             <!-- Section 4: 결론 -->
             <section id="conclusion" class="mb-28 scroll-animate">
-                <h2 class="text-4xl md:text-5xl section-title-custom">4. 결론</h2> <!-- UPDATED font size -->
+                <h2 class="text-4xl md:text-5xl section-title-custom">4. 결론</h2>
                 <div class="card-custom p-7 mb-10">
-                    <h3 class="text-2xl font-semibold text-primary-blue mb-4">가. 조사 결과 종합 및 주요 발견점 요약</h3> <!-- UPDATED font size -->
+                    <h3 class="text-2xl font-semibold text-primary-blue mb-4">가. 조사 결과 종합 및 주요 발견점 요약</h3>
                     <ul class="list-disc list-inside text-gray-800 space-y-3 leading-relaxed">
-                        <li><strong style="color: #1e4c07;">AI 활용 정도 인식:</strong> 학생들은 AI 과다 의존보다 <span class="highlight-keyword">적절한 활용</span>(힌트 50%)이 가장 적절하다는 의견이 많았고, <span class="highlight-keyword">기본 개념만 익힐 때 참고용(27.8%)</span>으로 사용하는 것이 좋다는 의견도 있었다.</li>
-                        <li><strong style="color: #1e4c07;">AI 답변 이해도 및 학습 노력:</strong> 대다수(94.5%)가 AI 답변을 이해한다고 인식. <span class="highlight-keyword">AI 내용을 소화하려는 노력</span>이 관찰되었다.</li>
-                        <li><strong style="color: #1e4c07;">AI 사용의 방해 요인 인식:</strong> <span class="highlight-keyword">36.8%는 AI 사용이 사고력/지식 축적에 방해된다고 우려</span>. AI 영향에 대한 인식이 다양했다.</li>
-                        <li><strong style="color: #1e4c07;">AI 사용 기준의 모호성:</strong> AI 사용 시점에 대한 <span class="highlight-keyword">명확한 기준이 없거나 개인별 차이</span>가 존재했다.</li>
+                        <li><span class="highlight-keyword">AI 활용 정도 인식:</span> 학생들은 AI 과다 의존보다 <span class="highlight-keyword">적절한 활용(힌트 50%)</span>이 가장 적절하다는 의견이 많았고, <span class="highlight-keyword">기본 개념만 익힐 때 참고용(27.8%)</span>으로 사용하는 것이 좋다는 의견도 있었다.</li>
+                        <li><span class="highlight-keyword">AI 답변 이해도 및 학습 노력:</span> 대다수(<span class="highlight-keyword">94.5%</span>)가 AI 답변을 이해한다고 인식. <span class="highlight-keyword">AI 내용을 소화하려는 노력</span>이 관찰되었다.</li>
+                        <li><span class="highlight-keyword">AI 사용의 방해 요인 인식:</span> <span class="highlight-keyword">36.8%는 AI 사용이 사고력/지식 축적에 방해된다고 우려</span>. AI 영향에 대한 인식이 다양했다.</li>
+                        <li><span class="highlight-keyword">AI 사용 기준의 모호성:</span> AI 사용 시점에 대한 <span class="highlight-keyword">명확한 기준이 없거나 개인별 차이</span>가 존재했다.</li>
                     </ul>
                 </div>
 
                 <div class="card-custom p-7 mb-10">
-                    <h3 class="text-2xl font-semibold text-primary-blue mb-4">나. 조사를 통해 새롭게 알게 된 점 및 느낀 점</h3> <!-- UPDATED font size -->
-                    <p class="text-gray-800 leading-relaxed mb-3">학생들은 <span class="highlight-keyword">AI를 학습 도구로 인식</span>하며 <span class="highlight-keyword">적절한 사용 방식을 고민</span>했다. AI 답변 해석 및 자기 지식화 노력은 긍정적이었다. 동시에 <span class="highlight-keyword">사고력 저하 우려, 사용 기준 부족, 정보 신뢰성 문제</span>가 드러났다. <span class="highlight-keyword">비판적 수용, 윤리적 인식, 자기주도 학습 태도</span>의 중요성을 느꼈다.</p>
-                    <p class="text-gray-800 leading-relaxed">조사 결과는 한국청소년정책연구원의 연구와 유사점을 보이며, <span class="highlight-keyword">청소년 세대 전체의 과제</span>를 반영한다. AI를 사고 확장 동반자로 보고, 스스로 판단하는 힘이 중요하며, AI 리터러시 교육의 필요성을 시사한다.</p>
+                    <h3 class="text-2xl font-semibold text-primary-blue mb-4">나. 조사를 통해 새롭게 알게 된 점 및 느낀 점</h3>
+                    <p class="text-gray-800 leading-relaxed mb-3">학생들은 <span class="highlight-keyword">AI를 학습 도구로 인식</span>하며 <span class="highlight-keyword">적절한 사용 방식</span>을 고민했다. <span class="highlight-keyword">AI 답변 해석 및 자기 지식화 노력은 긍정적</span>이었다. 동시에 <span class="highlight-keyword">사고력 저하 우려, 사용 기준 부족, 정보 신뢰성 문제</span>가 드러났다. <span class="highlight-keyword">비판적 수용, 윤리적 인식, 자기주도 학습 태도</span>의 중요성을 느꼈다.</p>
+                    <p class="text-gray-800 leading-relaxed">조사 결과는 <span class="highlight-keyword">한국청소년정책연구원의 연구와 유사점</span>을 보이며, <span class="highlight-keyword">청소년 세대 전체의 과제</span>를 반영한다. <span class="highlight-keyword">AI를 사고 확장 동반자로 보고, 스스로 판단하는 힘</span>이 중요하며, <span class="highlight-keyword">AI 리터러시 교육의 필요성</span>을 시사한다.</p>
                 </div>
                 
                 <div class="card-custom p-7 mb-10">
-                    <h3 class="text-2xl font-semibold text-primary-blue mb-4">다. 효과적인 AI 활용을 위한 제언</h3> <!-- UPDATED font size -->
+                    <h3 class="text-2xl font-semibold text-primary-blue mb-4">다. 효과적인 AI 활용을 위한 제언</h3>
                     <div class="space-y-5">
                         <div class="recommendation-item">
                             <h4 class="font-semibold text-gray-900 text-lg">💡 1. AI를 '답변기'가 아닌 '사고 확장 도구'로 활용하기</h4>
@@ -407,14 +366,14 @@ Constraints: Single HTML file, no external JS/CSS (except CDNs), no SVG/Mermaid.
                 </div>
 
                 <div class="card-custom p-8 pledge-card">
-                    <h3 class="text-2xl font-bold text-primary-blue mb-4">라. 우리의 다짐</h3> <!-- UPDATED font size -->
+                    <h3 class="text-2xl font-bold text-primary-blue mb-4">라. 우리의 다짐</h3>
                     <p class="text-gray-800 leading-relaxed font-medium">본 조사를 통해 생성형 AI의 효과적인 학습 활용에 대한 깊은 통찰을 얻었다. 앞으로 AI를 사용할 때, 조사 결과에서 나타난 우려들을 경계하고 제언한 내용들을 적극 실천하여, AI에 의존하기보다 AI와 함께 성장하며 스스로 생각하는 힘과 지식을 꾸준히 키워나갈 것을 다짐한다. 또한, 우리가 얻은 지식과 경험을 친구들과 공유하며, 다 함께 AI 시대를 현명하게 헤쳐나갈 수 있도록 노력할 것이다.</p>
                 </div>
             </section>
 
             <!-- Section 5: 참고자료 -->
             <section id="references" class="mb-24 scroll-animate">
-                <h2 class="text-4xl md:text-5xl section-title-custom">5. 참고자료</h2> <!-- UPDATED font size -->
+                <h2 class="text-4xl md:text-5xl section-title-custom">5. 참고자료</h2>
                 <div class="card-custom p-7">
                     <ul class="list-disc list-inside text-gray-800 space-y-3">
                         <li>인터뷰 전사 (조정모, 정재희 학생) - 미림마이스터고등학교 뉴미디어소프트웨어과 1학년 4반 (2025.5.)</li>
@@ -438,7 +397,6 @@ Constraints: Single HTML file, no external JS/CSS (except CDNs), no SVG/Mermaid.
     <!-- 이 HTML 인포그래픽은 학생 보고서의 내용을 시각화한 것입니다. Chart.js와 Tailwind CSS가 사용되었습니다. -->
 
     <script>
-
         // Helper function for label wrapping (한국어 약 16자 기준)
         function wrapLabel(str, maxWidth) {
             if (!str) return [''];
@@ -487,10 +445,10 @@ Constraints: Single HTML file, no external JS/CSS (except CDNs), no SVG/Mermaid.
         document.addEventListener('DOMContentLoaded', () => {
             const totalRespondents = 18; // Define total number of respondents for calculations
 
-            const body = document.body;
-            const mainHeader = document.getElementById('mainHeader'); // Get the header element
+            const splashScreen = document.getElementById('splashScreen');
+            const scrollArrowsSplash = document.getElementById('scrollArrowsSplash');
+            const mainHeaderContent = document.getElementById('mainHeaderContent');
             const fullContentWrapper = document.getElementById('fullContentWrapper');
-            const scrollArrows = document.getElementById('scrollArrows');
 
             // Add onerror to image tags for placeholder images if original is not found
             document.querySelectorAll('img').forEach(img => {
@@ -499,38 +457,24 @@ Constraints: Single HTML file, no external JS/CSS (except CDNs), no SVG/Mermaid.
                 }
             });
 
-            // Initially add 'initial-view' to body to center header and hide overflow
-            body.classList.add('initial-view');
-            // fullContentWrapper's initial styles are set in CSS to be hidden and off-screen by transform
-
-            // Click listener for scroll arrows
-            scrollArrows.addEventListener('click', () => {
-                // Remove 'initial-view' class from body to allow normal scrolling and change background
-                body.classList.remove('initial-view');
+            // Click listener for scroll arrows on the splash screen
+            scrollArrowsSplash.addEventListener('click', () => {
+                // Add fade-out class to splash screen
+                splashScreen.classList.add('fade-out');
                 
-                // Add class to mainHeader to apply solid navy background and other revealed styles
-                mainHeader.classList.add('header-revealed');
+                // Show the main content header
+                mainHeaderContent.classList.add('show-header');
 
-                // Make the content wrapper visible and trigger its slide-up transition
+                // Make the full content wrapper visible and trigger its slide-down transition
                 fullContentWrapper.classList.add('is-visible');
 
-                // Smoothly scroll to the first section after the content starts revealing
-                // Use a longer delay to ensure the content wrapper's transition completes
+                // Smoothly scroll to the top after the content has slid down
                 setTimeout(() => {
-                    const firstSection = document.getElementById('motivation-purpose');
-                    if (firstSection) {
-                        // Get the top position of the target section
-                        const targetOffset = firstSection.offsetTop;
-                        
-                        // Scroll to the target section with smooth behavior
-                        window.scrollTo({
-                            top: targetOffset,
-                            behavior: "smooth"
-                        });
-                    }
-                    // Hide arrows after click and content reveal
-                    scrollArrows.style.display = 'none';
-                }, 1200); // This delay should match or exceed the fullContentWrapper's transition duration (1.2s)
+                    window.scrollTo({
+                        top: 0,
+                        behavior: "smooth"
+                    });
+                }, 1000); // Adjust delay to match splashScreen transition
             });
 
             // Scroll Animation Logic for sections (remains active after initial reveal)
@@ -548,19 +492,13 @@ Constraints: Single HTML file, no external JS/CSS (except CDNs), no SVG/Mermaid.
                 threshold: 0.1
             });
 
-            // Observe elements only after the content is revealed and its transition finishes
+            // Observe elements after fullContentWrapper is visible
             fullContentWrapper.addEventListener('transitionend', function handler(event) {
-                // Ensure this listener only runs for the 'transform' property of fullContentWrapper
                 if (event.propertyName === 'transform' && fullContentWrapper.classList.contains('is-visible')) {
-                    // Set a small additional delay before observing,
-                    // to ensure the scroll action completes first for a smoother experience
-                    setTimeout(() => {
-                        animatedElements.forEach(el => {
-                            observer.observe(el);
-                        });
-                    }, 200); // Small delay before animating sections
-
-                    this.removeEventListener('transitionend', handler); // Remove listener after observing
+                    animatedElements.forEach(el => {
+                        observer.observe(el);
+                    });
+                    this.removeEventListener('transitionend', handler);
                 }
             });
 
@@ -639,7 +577,7 @@ Constraints: Single HTML file, no external JS/CSS (except CDNs), no SVG/Mermaid.
                 };
                 const q1Options = {
                     responsive: true,
-                    maintainAspectRatio: false,
+                    maintainAspectRatio: false, // Ensure this is false for responsiveness based on container size
                     plugins: {
                         legend: {
                             position: 'bottom',
@@ -697,8 +635,7 @@ Constraints: Single HTML file, no external JS/CSS (except CDNs), no SVG/Mermaid.
                 createChart(q1Ctx, 'pie', q1Data, q1Options);
             }
 
-
-            // Chart 2: AI 답변 이해도 (Bar Chart) - Reversed color gradient
+            // Chart 2: AI 답변 이해도 (Bar Chart) - Apply barChartGradient directly
             const q2Ctx = document.getElementById('surveyChart2')?.getContext('2d');
             if (q2Ctx) {
                 // New labels as requested
@@ -706,23 +643,18 @@ Constraints: Single HTML file, no external JS/CSS (except CDNs), no SVG/Mermaid.
                 // New data values for 18 respondents from user's snippet
                 const q2DataValues = [0, 0, 5.6, 66.7, 27.8]; 
                 
-                // Use a different, softer gradient scale, and apply it in the correct order for bottom-darker
-                const q2Colors = [
-                    '#EEEFE0', // Darkest (for "전혀 그렇지 않다")
-                    '#D1D8BE',
-                    '#A7C1A8',
-                    '#819A91', 
-                    '#7A8E6F' // Lightest(for "매우 그렇다")
-                ];
-
                 const q2Data = {
                     labels: q2Labels.map(label => wrapLabel(label, 12)), // Still wrap labels for axis ticks
                     datasets: [{
                         label: '응답 비율 (%)',
                         data: q2DataValues,
-                        // Chart.js applies colors from bottom to top for indexAxis 'y'.
-                        // To make the bottom bar darkest and top lightest, we reverse both labels and data values.
-                        backgroundColor: q2Colors.reverse(), // Use the prepared colors and reverse for display order
+                        // Apply barChartGradient directly for "bottom darkest, top lightest"
+                        // Since `indexAxis: 'y'`, Chart.js draws bars from the bottom (index 0) to top.
+                        // So to make "아래부터 진한색이고 위쪽으로갈수록 연해지도록", we need `barChartGradient` to be ordered darkest to lightest.
+                        // And the data order needs to be from the lowest bar (darkest) to the highest bar (lightest).
+                        // If the data is ordered from "전혀 그렇지 않다" to "매우 그렇다" (lowest bar to highest bar),
+                        // then we need to reverse the gradient so `barChartGradient[0]` is the darkest.
+                        backgroundColor: [...chartColors.barChartGradient].reverse(), /* Reversed to achieve bottom darkest, top lightest */
                         borderColor: chartColors.primaryGreenishGrey, // Match primary color for border
                         borderWidth: 1,
                         borderRadius: 5, // Add rounded corners to bars
@@ -777,7 +709,7 @@ Constraints: Single HTML file, no external JS/CSS (except CDNs), no SVG/Mermaid.
                 createChart(q2Ctx, 'bar', q2Data, q2Options);
             }
 
-            // Chart 3: AI 사용, 사고력에 방해될까? (Horizontal Bar Chart)
+            // Chart 3: AI 사용, 사고력에 방해될까? (Horizontal Bar Chart) - Apply barChartGradient directly
             const q3Ctx = document.getElementById('surveyChart3')?.getContext('2d');
             if (q3Ctx) {
                 const q3Labels = [
@@ -785,22 +717,13 @@ Constraints: Single HTML file, no external JS/CSS (except CDNs), no SVG/Mermaid.
                 ];
                 // New data values for 18 respondents from user's snippet
                 const q3DataValues = [10.5, 26.3, 31.6, 26.3, 5.3]; 
-
-                // For Q3, also reverse the gradient for bottom-darker, top-lighter effect
-                const q3Colors = [
-                    '#7A8E6F', // Darkest (for "전혀 아니다")
-                    '#819A91', 
-                    '#A7C1A8',
-                    '#D1D8BE', 
-                    '#EEEFE0' // Lightest (for "매우 그렇다")
-                ];
                 
                 const q3Data = {
                     labels: q3Labels.map(label => wrapLabel(label, 12)), // Still wrap labels for axis ticks
                     datasets: [{
                         label: '응답 비율 (%)',
                         data: q3DataValues,
-                        backgroundColor: q3Colors.reverse(), // Apply reversed colors
+                        backgroundColor: [...chartColors.barChartGradient].reverse(), /* Reversed to achieve bottom darkest, top lightest */
                         borderColor: chartColors.primaryGreenishGrey, // Match primary color for border
                         borderWidth: 1,
                         borderRadius: 5, // Add rounded corners to bars
@@ -824,7 +747,7 @@ Constraints: Single HTML file, no external JS/CSS (except CDNs), no SVG/Mermaid.
                         y: {
                             ticks: {
                                 font: {
-                                    size: 11 // UPDATED font size
+                                    size: 11
                                 }
                             }
                         }
@@ -855,7 +778,6 @@ Constraints: Single HTML file, no external JS/CSS (except CDNs), no SVG/Mermaid.
                 createChart(q3Ctx, 'bar', q3Data, q3Options);
             }
         });
-    
     </script>
 </body>
 </html>
